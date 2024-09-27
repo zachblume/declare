@@ -1,15 +1,15 @@
 // Overwrites the db with models in models/**/*, this file executed every time a file in models/**/* changes
 const fs = require("fs");
-const { ClickHouseClient } = require("@clickhouse/client");
+const { createClient } = require("@clickhouse/client");
+
+const db = createClient({
+    url: process.env.CLICKHOUSE_HOST ?? "http://clickhouse:8123",
+    username: process.env.CLICKHOUSE_USER ?? "default",
+    password: process.env.CLICKHOUSE_PASSWORD ?? "",
+});
 
 const executeSql = async (sql) => {
-    const db = new ClickHouseClient({
-        url: "http://clickhouse:8123",
-        username: "default",
-        password: "password",
-    });
-
-    await db.query(sql);
+    return await db.query({ query: sql });
 };
 
 async function main(db) {
@@ -32,23 +32,24 @@ async function main(db) {
                 table,
             };
         });
+
+    // Load each model definition and apply it to db as a view, for quickness
     for (const model of models) {
-        // Template the sql with CREATE OR REPLACE VIEW schema.table AS (...model.sql...);
+        console.log(`Loading model ${model.schema}.${model.table}`);
         const filePath = `./${model.fullPath}`;
-        console.log(
-            `Loading model ${model.schema}.${model.table} at ${model.fullPath}`
-        );
         const fileContents = await fs.promises.readFile(filePath, {
             encoding: "utf8",
         });
         const finalSql = `CREATE OR REPLACE VIEW ${model.schema}.${model.table} AS (${fileContents})`;
 
         // Write it to db
-        executeSql(finalSql).then(() => {
-            console.log(`Model ${model.schema}.${model.table} loaded`);
-        }).catch((err) => {
-            throw err;
-        })
+        executeSql(finalSql)
+            .then(() => {
+                console.log(`Model ${model.schema}.${model.table} loaded`);
+            })
+            .catch((err) => {
+                throw err;
+            });
     }
 }
 

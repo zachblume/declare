@@ -24,6 +24,8 @@ services:
       context: ../
       dockerfile: .declare/Dockerfile-hot-reload-models
     container_name: hot-reload-models
+    depends_on:
+      - clickhouse
     volumes:
       # Mount the model definitions directory to the container for watching
       - ./../models:/usr/src/app/models
@@ -80,9 +82,7 @@ services:
   #     - temporal
   #   environment:
   #     - TEMPORAL_ADDRESS=temporal:7233
-  #     - TEMPORAL_CLI_ADDRESS=temporal:7233
-  #   image: temporalio/admin-tools:latest
-  #   networks:
+  #     - TEMPORAL_CLI_ADDRESS=
   #     - temporal-network
   #   stdin_open: true
   #   tty: true
