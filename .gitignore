@@ -1,6 +1,5 @@
 .env
 !.env.example
-.declare
 node_modules
 build
 dist

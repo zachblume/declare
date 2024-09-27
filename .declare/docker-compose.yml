@@ -4,12 +4,20 @@ services:
   dashboards:
     build:
       context: ../
-      dockerfile: config/Dockerfile-dashboards
+      dockerfile: .declare/Dockerfile-dashboards
     container_name: dashboards
     ports:
       - "5173:5173"
     volumes:
       - ./../dashboards/src:/usr/src/app/src
+
+  hot-reload-models:
+    build:
+      context: ../
+      dockerfile: .declare/Dockerfile-hot-reload-models
+    container_name: hot-reload-models
+    volumes:
+      - ./../models:/usr/src/app/models
 
   clickhouse:
     image: clickhouse/clickhouse-server
