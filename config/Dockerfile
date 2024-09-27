@@ -1,8 +1,8 @@
 FROM node:latest
 WORKDIR /usr/src/app
-COPY ./dashboards/package* .
+COPY ../dashboards/package* .
 RUN npm install
-COPY ./dashboards .
+COPY ../dashboards .
 
 EXPOSE 5173
 
