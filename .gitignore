@@ -4,3 +4,13 @@
 node_modules
 build
 dist
+.ignore
+.log
+.cache
+.vscode
+.idea
+.DS_Store
+logs/*
+!logs/.gitkeep
+!.gitkeep
+!.gitignore
