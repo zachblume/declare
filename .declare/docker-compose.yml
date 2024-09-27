@@ -25,7 +25,8 @@ services:
       dockerfile: .declare/Dockerfile-hot-reload-models
     container_name: hot-reload-models
     depends_on:
-      - clickhouse
+      clickhouse:
+        condition: service_healthy
     volumes:
       # Mount the model definitions directory to the container for watching
       - ./../models:/usr/src/app/models
@@ -55,6 +56,7 @@ services:
       - 5432:5432
     volumes:
       - /var/lib/postgresql/data
+
   temporal:
     container_name: temporal
     depends_on:
@@ -76,6 +78,7 @@ services:
     # Make docker compose stop faster by specifying the command to run/kill
     # explicitly
     command: ["bash","/start-temporal.sh"]
+
   # temporal-admin-tools:
   #   container_name: temporal-admin-tools
   #   depends_on:
@@ -86,6 +89,7 @@ services:
   #     - temporal-network
   #   stdin_open: true
   #   tty: true
+
   # temporal-ui:
   #   container_name: temporal-ui
   #   depends_on:
@@ -98,6 +102,7 @@ services:
   #     - temporal-network
   #   ports:
   #     - 8080:8080
+
 networks:
   temporal-network:
     driver: bridge
