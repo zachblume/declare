@@ -3,7 +3,7 @@
 default: start open
 
 open:
-	@until nc -z localhost 5173 > /dev/null 2>&1; do sleep 0.05; done
+	@until nc -z localhost 5173 > /dev/null 2>&1; do sleep 0.2; done
 	@echo "Opening http://localhost:5173"
 	@open http://localhost:5173
 

@@ -1,14 +1,15 @@
+name: declare
+
 services:
-  declare:
+  dashboards:
     build:
       context: ../
-      dockerfile: config/Dockerfile
-    container_name: declare
+      dockerfile: config/Dockerfile-dashboards
+    container_name: dashboards
     ports:
       - "5173:5173"
     volumes:
       - ./../dashboards/src:/usr/src/app/src
-    command: ["npm", "run", "dev", "--", "--host", "0.0.0.0"]
 
   clickhouse:
     image: clickhouse/clickhouse-server
@@ -19,7 +20,7 @@ services:
       - "127.0.0.1:8123:8123"
       - "127.0.0.1:9000:9000"
 
-  postgresql:
+  temporal-postgresql:
     container_name: temporal-postgresql
     environment:
       POSTGRES_PASSWORD: temporal
@@ -34,7 +35,7 @@ services:
   temporal:
     container_name: temporal
     depends_on:
-      - postgresql
+      - temporal-postgresql
     environment:
       - DB=postgres12
       - DB_PORT=5432
@@ -49,30 +50,33 @@ services:
       - 7233:7233
     volumes:
       - ./temporal/dynamicconfig:/etc/temporal/config/dynamicconfig
-  temporal-admin-tools:
-    container_name: temporal-admin-tools
-    depends_on:
-      - temporal
-    environment:
-      - TEMPORAL_ADDRESS=temporal:7233
-      - TEMPORAL_CLI_ADDRESS=temporal:7233
-    image: temporalio/admin-tools:latest
-    networks:
-      - temporal-network
-    stdin_open: true
-    tty: true
-  temporal-ui:
-    container_name: temporal-ui
-    depends_on:
-      - temporal
-    environment:
-      - TEMPORAL_ADDRESS=temporal:7233
-      - TEMPORAL_CORS_ORIGINS=http://localhost:3000
-    image: temporalio/ui:latest
-    networks:
-      - temporal-network
-    ports:
-      - 8080:8080
+    # Make docker compose stop faster by specifying the command to run/kill
+    # explicitly
+    command: ["bash","/start-temporal.sh"]
+  # temporal-admin-tools:
+  #   container_name: temporal-admin-tools
+  #   depends_on:
+  #     - temporal
+  #   environment:
+  #     - TEMPORAL_ADDRESS=temporal:7233
+  #     - TEMPORAL_CLI_ADDRESS=temporal:7233
+  #   image: temporalio/admin-tools:latest
+  #   networks:
+  #     - temporal-network
+  #   stdin_open: true
+  #   tty: true
+  # temporal-ui:
+  #   container_name: temporal-ui
+  #   depends_on:
+  #     - temporal
+  #   environment:
+  #     - TEMPORAL_ADDRESS=temporal:7233
+  #     - TEMPORAL_CORS_ORIGINS=http://localhost:3000
+  #   image: temporalio/ui:latest
+  #   networks:
+  #     - temporal-network
+  #   ports:
+  #     - 8080:8080
 networks:
   temporal-network:
     driver: bridge
