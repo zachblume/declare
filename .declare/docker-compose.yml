@@ -2,6 +2,13 @@ name: declare
 
 services:
   dashboards:
+    # Vite/react development server
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:5173/"]
+      interval: 1s
+      timeout: 10s
+      retries: 5
+    restart: on-failure
     build:
       context: ../
       dockerfile: .declare/Dockerfile-dashboards
@@ -9,6 +16,7 @@ services:
     ports:
       - "5173:5173"
     volumes:
+      # Mount the dashboards source directory to the container for watching
       - ./../dashboards/src:/usr/src/app/src
 
   hot-reload-models:
@@ -17,6 +25,7 @@ services:
       dockerfile: .declare/Dockerfile-hot-reload-models
     container_name: hot-reload-models
     volumes:
+      # Mount the model definitions directory to the container for watching
       - ./../models:/usr/src/app/models
 
   clickhouse:
@@ -25,8 +34,12 @@ services:
     container_name: clickhouse
     hostname: clickhouse
     ports:
+      # The HTTP api
       - "127.0.0.1:8123:8123"
+      # The native protocol
       - "127.0.0.1:9000:9000"
+    security_opt:
+      - seccomp:unconfined
 
   temporal-postgresql:
     container_name: temporal-postgresql

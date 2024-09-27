@@ -2,9 +2,8 @@
 # schema.
 FROM node:latest
 WORKDIR /usr/src/app
-COPY ../.declare/hot-reload-models/package* .
-RUN npm install
 COPY ../.declare/hot-reload-models .
+RUN npm install
 
 ENV NODE_ENV=production
 ENV CHOKIDAR_USEPOLLING=true
