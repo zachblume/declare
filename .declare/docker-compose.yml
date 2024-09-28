@@ -17,7 +17,7 @@ services:
             - "5173:5173"
         volumes:
             # Mount the dashboards source directory to the container for watching
-            - ./../dashboards/src:/usr/src/app/src
+            - ./../dashboards:/usr/src/app/src/user_dashboards
             # Mount the model definitions directory to the container for watching as well
             - ./../models:/usr/src/app/src/models
 
