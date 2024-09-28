@@ -21,11 +21,11 @@ services:
             # Mount the model definitions directory to the container for watching as well
             - ./../models:/usr/src/app/src/models
 
-    hot-reload-models:
+    hot-model-reloader:
         build:
             context: ../
-            dockerfile: .declare/Dockerfile-hot-reload-models
-        container_name: hot-reload-models
+            dockerfile: .declare/Dockerfile-hot-model-reloader
+        container_name: hot-model-reloader
         depends_on:
             clickhouse:
                 condition: service_healthy

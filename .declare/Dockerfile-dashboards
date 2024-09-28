@@ -6,6 +6,5 @@ RUN npm install
 EXPOSE 5173
 
 ENV NODE_ENV=development
-ENV CHOKIDAR_USEPOLLING=true
 
 CMD ["npm", "run", "dev", "--","--host", "0.0.0.0"]

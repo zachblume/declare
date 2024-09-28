@@ -2,10 +2,9 @@
 # schema.
 FROM node:latest
 WORKDIR /usr/src/app
-COPY ../.declare/hot-reload-models .
+COPY ../.declare/hot-model-reloader .
 RUN npm install
 
 ENV NODE_ENV=production
-ENV CHOKIDAR_USEPOLLING=true
 
 CMD ["npx", "nodemon", "index.js", "--watch", "models", "-e", "*"]

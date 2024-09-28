@@ -35,7 +35,6 @@ async function main() {
 
     // Load each model definition and apply it to db as a view, for quickness
     for (const model of models) {
-        console.log(`Loading model ${model.database}.${model.table}`);
         const filePath = `./${model.fullPath}`;
         const fileContents = await fs.promises.readFile(filePath, {
             encoding: "utf8",
@@ -49,13 +48,15 @@ async function main() {
             await executeSql(createDatabaseSql);
             await executeSql(dropViewSql);
             await executeSql(createViewSql);
-            console.log(`Model ${model.database}.${model.table} loaded`);
         } catch (err) {
-            console.error(`Error loading model ${model.database}.${model.table}:`, err);
+            console.error(`Error while loading model ${model.database}.${model.table}:`, err);
+            throw err;
         }
     }
+
+    console.log("Models reloaded");
 }
 
 main()
-    .then(() => console.log("Exiting"))
+    .then(()=>null)
     .catch(console.error);
