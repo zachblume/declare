@@ -1,114 +1,117 @@
 name: declare
 
 services:
-  dashboards:
-    # Vite/react development server
-    healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:5173/"]
-      interval: 1s
-      timeout: 10s
-      retries: 5
-    restart: on-failure
-    build:
-      context: ../
-      dockerfile: .declare/Dockerfile-dashboards
-    container_name: dashboards
-    ports:
-      - "5173:5173"
-    volumes:
-      # Mount the dashboards source directory to the container for watching
-      - ./../dashboards/src:/usr/src/app/src
+    dashboards:
+        # Vite/react development server
+        healthcheck:
+            test: ["CMD", "curl", "-f", "http://localhost:5173/"]
+            interval: 1s
+            timeout: 10s
+            retries: 5
+        restart: on-failure
+        build:
+            context: ../
+            dockerfile: .declare/Dockerfile-dashboards
+        container_name: dashboards
+        ports:
+            - "5173:5173"
+        volumes:
+            # Mount the dashboards source directory to the container for watching
+            - ./../dashboards/src:/usr/src/app/src
+            # Mount the model definitions directory to the container for watching as well
+            - ./../models:/usr/src/app/src/models
 
-  hot-reload-models:
-    build:
-      context: ../
-      dockerfile: .declare/Dockerfile-hot-reload-models
-    container_name: hot-reload-models
-    # depends_on:
-    #   clickhouse:
-    #     condition: service_healthy
-    volumes:
-      # Mount the model definitions directory to the container for watching
-      - ./../models:/usr/src/app/models
+    hot-reload-models:
+        build:
+            context: ../
+            dockerfile: .declare/Dockerfile-hot-reload-models
+        container_name: hot-reload-models
+        depends_on:
+            clickhouse:
+                condition: service_healthy
+        volumes:
+            # Mount the model definitions directory to the container for watching
+            - ./../models:/usr/src/app/models
 
-  clickhouse:
-    image: clickhouse/clickhouse-server
-    user: "101:101"
-    container_name: clickhouse
-    hostname: clickhouse
-    ports:
-      # The HTTP api
-      - "127.0.0.1:8123:8123"
-      # The native protocol
-      - "127.0.0.1:9000:9000"
-    # healthcheck:
-    #   test: ["CMD", "curl", "-f", "http://localhost:8123/"]
-    #   interval: 1s
-    #   timeout: 10s
-    #   retries: 5
-    security_opt:
-      - seccomp:unconfined
+    clickhouse:
+        image: clickhouse/clickhouse-server
+        user: "101:101"
+        container_name: clickhouse
+        hostname: clickhouse
+        ports:
+            # The HTTP api
+            - "127.0.0.1:8123:8123"
+            # The native protocol
+            - "127.0.0.1:9000:9000"
+        healthcheck:
+            test: wget --no-verbose --tries=1 --spider http://localhost:8123/ping || exit 1
+            interval: 100ms
+            timeout: 250ms
+            retries: 20
+        restart: on-failure
+        security_opt:
+            - seccomp:unconfined
 
-  temporal-postgresql:
-    container_name: temporal-postgresql
-    environment:
-      POSTGRES_PASSWORD: temporal
-      POSTGRES_USER: temporal
-    image: postgres:latest
-    networks:
-      - temporal-network
-    ports:
-      - 5432:5432
-    volumes:
-      - /var/lib/postgresql/data
+    temporal-postgresql:
+        container_name: temporal-postgresql
+        environment:
+            POSTGRES_PASSWORD: temporal
+            POSTGRES_USER: temporal
+        image: postgres:latest
+        networks:
+            - temporal-network
+        ports:
+            - 5432:5432
+        volumes:
+            - /var/lib/postgresql/data
 
-  temporal:
-    container_name: temporal
-    depends_on:
-      - temporal-postgresql
-    environment:
-      - DB=postgres12
-      - DB_PORT=5432
-      - POSTGRES_USER=temporal
-      - POSTGRES_PWD=temporal
-      - POSTGRES_SEEDS=postgresql
-      - DYNAMIC_CONFIG_FILE_PATH=config/dynamicconfig/development-sql.yaml
-    image: temporalio/auto-setup:latest
-    networks:
-      - temporal-network
-    ports:
-      - 7233:7233
-    volumes:
-      - ./temporal/dynamicconfig:/etc/temporal/config/dynamicconfig
-    # Make docker compose stop faster by specifying the command to run/kill
-    # explicitly
-    command: ["bash","/start-temporal.sh"]
+    temporal:
+        container_name: temporal
+        depends_on:
+            - temporal-postgresql
+        environment:
+            - DB=postgres12
+            - DB_PORT=5432
+            - POSTGRES_USER=temporal
+            - POSTGRES_PWD=temporal
+            - POSTGRES_SEEDS=postgresql
+            - DYNAMIC_CONFIG_FILE_PATH=config/dynamicconfig/development-sql.yaml
+        image: temporalio/auto-setup:latest
+        networks:
+            - temporal-network
+        ports:
+            - 7233:7233
+        volumes:
+            - ./temporal/dynamicconfig:/etc/temporal/config/dynamicconfig
+        # Make docker compose stop faster by specifying the command to run/kill
+        # explicitly
+        command: ["bash", "/start-temporal.sh"]
 
-  # temporal-admin-tools:
-  #   container_name: temporal-admin-tools
-  #   depends_on:
-  #     - temporal
-  #   environment:
-  #     - TEMPORAL_ADDRESS=temporal:7233
-  #     - TEMPORAL_CLI_ADDRESS=
-  #     - temporal-network
-  #   stdin_open: true
-  #   tty: true
+    # temporal-admin-tools:
+    #   container_name: temporal-admin-tools
+    #   depends_on:
+    #     - temporal
+    #   environment:
+    #     - TEMPORAL_ADDRESS=temporal:7233
+    #     - TEMPORAL_CLI_ADDRESS=
+    #     - temporal-network
+    #   stdin_open: true
+    #   tty: true
 
-  # temporal-ui:
-  #   container_name: temporal-ui
-  #   depends_on:
-  #     - temporal
-  #   environment:
-  #     - TEMPORAL_ADDRESS=temporal:7233
-  #     - TEMPORAL_CORS_ORIGINS=http://localhost:3000
-  #   image: temporalio/ui:latest
-  #   networks:
-  #     - temporal-network
-  #   ports:
-  #     - 8080:8080
+    # temporal-ui:
+    #   container_name: temporal-ui
+    #   depends_on:
+    #     - temporal
+    #   environment:
+    #     - TEMPORAL_ADDRESS=temporal:7233
+    #     - TEMPORAL_CORS_ORIGINS=http://localhost:3000
+    #   image: temporalio/ui:latest
+    #   networks:
+    #     - temporal-network
+    #   ports:
+    #     - 8080:8080
 
 networks:
-  temporal-network:
-    driver: bridge
-    name: temporal-network
+    temporal-network:
+        driver: bridge
+        name: temporal-network
