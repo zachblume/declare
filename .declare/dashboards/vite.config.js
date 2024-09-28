@@ -11,7 +11,7 @@ export default defineConfig({
             name: "custom-hmr",
             handleHotUpdate({ file, server }) {
                 // Check if the changed file matches your non-JS file types, e.g., .md
-                if (file.endsWith("definition.sql")) {
+                if (file.endsWith("hot-model-reloader.log")) {
                     // Trigger a full reload
                     server.ws.send({
                         type: "full-reload",

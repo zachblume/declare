@@ -31,24 +31,34 @@ async function main() {
 
     // Load each model definition and apply it to db as a view, for quickness
     for (const model of models) {
-        const filePath = `./${model.fullPath}`;
-        const fileContents = await fs.promises.readFile(filePath, {
-            encoding: "utf8",
-        });
-
-        const createDatabaseSql = `CREATE DATABASE IF NOT EXISTS ${model.database};`;
-        const createViewSql = `CREATE OR REPLACE VIEW ${model.database}.${model.table} AS (${fileContents});`;
-
         try {
+            const filePath = `./${model.fullPath}`;
+            const fileContents = await fs.promises.readFile(filePath, {
+                encoding: "utf8",
+            });
+
+            const createDatabaseSql = `CREATE DATABASE IF NOT EXISTS ${model.database};`;
+            const createViewSql = `CREATE OR REPLACE VIEW ${model.database}.${model.table} AS (${fileContents});`;
+
             await db.command({ query: createDatabaseSql });
             await db.command({ query: createViewSql });
         } catch (err) {
             console.error(
                 `Error while loading model ${model.database}.${model.table}:`,
-                err,
+                err
             );
             throw err;
         }
+    }
+
+    try {
+        // Write a log line to models/hot-model-reloader.log
+        // Create the file if it doesn't exist
+        const logFilePath = "./models/hot-model-reloader.log";
+        await fs.promises.appendFile(logFilePath, `${new Date()}\n`);
+    } catch (err) {
+        console.error(`Error while writing log file`, err);
+        throw err;
     }
 
     console.log("Models reloaded");
