@@ -11,9 +11,6 @@ export default function OrdersDashboard() {
     }, []);
 
     const barChartOptions = {
-        title: {
-            // text: 'Sample Bar Chart'
-        },
         tooltip: {},
         xAxis: {
             data: data ? data.map((item) => item.product_id) : [],
