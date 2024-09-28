@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import ReactECharts from "echarts-for-react";
 
-function Dog() {
+export default function OrdersDashboard() {
     const [data, setData] = useState(null);
     useEffect(() => {
         fetch("http://localhost:8001/api/ecommerce/orders_moved_from_postgres")
@@ -35,5 +35,3 @@ function Dog() {
         </div>
     );
 }
-
-export default Dog;
