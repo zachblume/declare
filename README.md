@@ -1,11 +1,17 @@
 # Declare
 
-Open source dbt alternative focused on accelerating the develop, preview, ship workflow for analytics
+The open-source data engineering framework for Clickhouse focused on accelerating the develop, preview, ship workflow for analytics.
 
--   1st class support for managing declarative etl in sql alongside transformations
--   instant branching environment on push (prefixed dbs, sql views in non-prod, seed.jsonl)
--   declarative dashboards written in React, buildless toolchain (N second deploys)
--   schedule dash delivery w embedded previews via Slack and email; app embedding
--   a file-based router convention for referencing identifiers, instead of {ref()} and per-project configuration
--   convention over configuration
--   managed clickhouse or clickhouse native (provide local dev experience virtually all other analytic meta-frameworks / hitch wagon to naturally growing ecosystem?)
+Two main goals: (1) declarative everything-as-code, and (2) very fast.
+
+-   [x] All-in on Clickhouse as the base of the stack, on local and cloud
+-   [x] Hot reloading across the local full-stack environment, measured in miliseconds
+-   [ ] Instant branch environments on push for quicker collaboration and QA
+-   [x] Declaratively defined SQL models
+    -   [x] File-based router convention for easy discovery
+    -   [x] Views in dev, configurable materialization in prod
+-   [x] Declaratively defined dashboards, written in React with component library
+-   [ ] Mange ETL configurations in SQL (`select * from postgres_connection.schema.table`)
+-   [x] Auto-generated REST APIs for models
+    -   [ ] JWT based authentication
+-   [ ] Schedule dashboard delivery with embedded previews via Slack and email
