@@ -1,8 +1,8 @@
 # Declare
 
-The open-source data engineering framework for Clickhouse focused on accelerating the develop, preview, ship workflow for analytics.
+The open-source data engineering framework for Clickhouse.
 
-Two main goals: (1) declarative everything-as-code, and (2) very fast.
+Focused on accelerating the develop, preview, ship workflow for analytics through (1) declarative everything-as-code, and (2) speed.
 
 -   [x] All-in on Clickhouse as the base of the stack, on local and cloud
 -   [x] Hot reloading across the local full-stack environment, measured in miliseconds
