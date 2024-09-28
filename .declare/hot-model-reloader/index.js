@@ -37,8 +37,7 @@ async function main() {
         });
 
         const createDatabaseSql = `CREATE DATABASE IF NOT EXISTS ${model.database};`;
-        const dropViewSql = `DROP VIEW IF EXISTS ${model.database}.${model.table};`;
-        const createViewSql = `CREATE VIEW ${model.database}.${model.table} AS (${fileContents});`;
+        const createViewSql = `CREATE OR REPLACE VIEW ${model.database}.${model.table} AS (${fileContents});`;
 
         try {
             await db.command({ query: createDatabaseSql });
