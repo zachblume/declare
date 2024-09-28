@@ -41,7 +41,6 @@ async function main() {
 
         try {
             await db.command({ query: createDatabaseSql });
-            await db.command({ query: dropViewSql });
             await db.command({ query: createViewSql });
         } catch (err) {
             console.error(
