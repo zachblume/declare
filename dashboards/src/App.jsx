@@ -7,13 +7,13 @@ function App() {
   useEffect(() => {
     fetch("http://localhost:8001/api/ecommerce/orders_moved_from_postgres")
       .then((res) => res.json())
-      .then(setData)
+      .then(response=>setData(response.data))
       .catch(console.error);
   }, []);
 
   const barChartOptions = {
     title: {
-      text: 'Sample Bar Chart'
+      // text: 'Sample Bar Chart'
     },
     tooltip: {},
     xAxis: {
@@ -31,7 +31,7 @@ function App() {
 
   return (
     <div>
-      <h1>Hello world</h1>
+      <p>Hello world</p>
       <ReactECharts option={barChartOptions} />
     </div>
   );
