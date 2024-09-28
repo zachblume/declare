@@ -8,10 +8,6 @@ const db = createClient({
     password: process.env.CLICKHOUSE_PASSWORD ?? "",
 });
 
-const executeSql = async (query) => {
-    return await db.exec({ query });
-};
-
 async function main() {
     // Recursively list all files in models/**/* along with metadata
     const files = await fs.promises.readdir("./models", {
@@ -45,11 +41,14 @@ async function main() {
         const createViewSql = `CREATE VIEW ${model.database}.${model.table} AS (${fileContents});`;
 
         try {
-            await executeSql(createDatabaseSql);
-            await executeSql(dropViewSql);
-            await executeSql(createViewSql);
+            await db.command({ query: createDatabaseSql });
+            await db.command({ query: dropViewSql });
+            await db.command({ query: createViewSql });
         } catch (err) {
-            console.error(`Error while loading model ${model.database}.${model.table}:`, err);
+            console.error(
+                `Error while loading model ${model.database}.${model.table}:`,
+                err
+            );
             throw err;
         }
     }
@@ -58,5 +57,7 @@ async function main() {
 }
 
 main()
-    .then(()=>null)
+    .then(() => {
+        /*do nothing*/
+    })
     .catch(console.error);

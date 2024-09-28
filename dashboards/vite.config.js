@@ -1,13 +1,13 @@
-import { defineConfig } from 'vite'
-import react from '@vitejs/plugin-react-swc'
+import { defineConfig } from "vite";
+import react from "@vitejs/plugin-react-swc";
+import ViteRestart from "vite-plugin-restart";
 
 // https://vitejs.dev/config/
 export default defineConfig({
-  plugins: [react()],
-  server: {
-    watch: {
-      // Don't ignore sql files
-      ignored: ['!**/*.sql']
-    }
-  }
-})
+  plugins: [
+    react(),
+    ViteRestart({
+      restart: ["**/*.sql"],
+    }),
+  ],
+});
