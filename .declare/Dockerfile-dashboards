@@ -1,6 +1,9 @@
 FROM node:latest
 WORKDIR /usr/src/app
-COPY ../dashboards .
+COPY .declare/dashboards .
+COPY dashboards/package* .
+RUN mkdir user_dashboards
+COPY dashboards user_dashboards
 RUN npm install
 
 EXPOSE 5173

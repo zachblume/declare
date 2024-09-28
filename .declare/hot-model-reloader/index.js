@@ -45,7 +45,7 @@ async function main() {
         } catch (err) {
             console.error(
                 `Error while loading model ${model.database}.${model.table}:`,
-                err
+                err,
             );
             throw err;
         }

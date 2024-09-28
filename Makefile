@@ -21,5 +21,7 @@ clean:
 	docker-compose -f .declare/docker-compose.yml down
 	docker-compose -f .declare/docker-compose.yml rm -f
 
-dev:
+dev: clean dev-up
+
+dev-up:
 	docker-compose -f .declare/docker-compose.yml up --build
