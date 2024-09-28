@@ -8,11 +8,11 @@ const db = createClient({
     password: process.env.CLICKHOUSE_PASSWORD ?? "",
 });
 
-const executeSql = async (sql) => {
-    return await db.query({ query: sql });
+const executeSql = async (query) => {
+    return await db.exec({ query });
 };
 
-async function main(db) {
+async function main() {
     // Recursively list all files in models/**/* along with metadata
     const files = await fs.promises.readdir("./models", {
         recursive: true,
@@ -24,32 +24,35 @@ async function main(db) {
         .filter((file) => file.name == "definition.sql")
         .map((file) => {
             const fullPath = `${file.parentPath}/${file.name}`;
-            const schema = file.parentPath.split("/")[1];
+            const database = file.parentPath.split("/")[1];
             const table = file.parentPath.split("/")[2];
             return {
                 fullPath,
-                schema,
+                database,
                 table,
             };
         });
 
     // Load each model definition and apply it to db as a view, for quickness
     for (const model of models) {
-        console.log(`Loading model ${model.schema}.${model.table}`);
+        console.log(`Loading model ${model.database}.${model.table}`);
         const filePath = `./${model.fullPath}`;
         const fileContents = await fs.promises.readFile(filePath, {
             encoding: "utf8",
         });
-        const finalSql = `CREATE OR REPLACE VIEW ${model.schema}.${model.table} AS (${fileContents})`;
 
-        // Write it to db
-        executeSql(finalSql)
-            .then(() => {
-                console.log(`Model ${model.schema}.${model.table} loaded`);
-            })
-            .catch((err) => {
-                throw err;
-            });
+        const createDatabaseSql = `CREATE DATABASE IF NOT EXISTS ${model.database};`;
+        const dropViewSql = `DROP VIEW IF EXISTS ${model.database}.${model.table};`;
+        const createViewSql = `CREATE VIEW ${model.database}.${model.table} AS (${fileContents});`;
+
+        try {
+            await executeSql(createDatabaseSql);
+            await executeSql(dropViewSql);
+            await executeSql(createViewSql);
+            console.log(`Model ${model.database}.${model.table} loaded`);
+        } catch (err) {
+            console.error(`Error loading model ${model.database}.${model.table}:`, err);
+        }
     }
 }
 

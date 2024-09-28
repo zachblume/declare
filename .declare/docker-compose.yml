@@ -24,9 +24,9 @@ services:
       context: ../
       dockerfile: .declare/Dockerfile-hot-reload-models
     container_name: hot-reload-models
-    depends_on:
-      clickhouse:
-        condition: service_healthy
+    # depends_on:
+    #   clickhouse:
+    #     condition: service_healthy
     volumes:
       # Mount the model definitions directory to the container for watching
       - ./../models:/usr/src/app/models
@@ -41,11 +41,11 @@ services:
       - "127.0.0.1:8123:8123"
       # The native protocol
       - "127.0.0.1:9000:9000"
-    healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:8123/"]
-      interval: 1s
-      timeout: 10s
-      retries: 5
+    # healthcheck:
+    #   test: ["CMD", "curl", "-f", "http://localhost:8123/"]
+    #   interval: 1s
+    #   timeout: 10s
+    #   retries: 5
     security_opt:
       - seccomp:unconfined
 
