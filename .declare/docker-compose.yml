@@ -33,6 +33,20 @@ services:
             # Mount the model definitions directory to the container for watching
             - ./../models:/usr/src/app/models
 
+    serve-models-api:
+        container_name: serve-models-api
+        build:
+            context: ../
+            dockerfile: .declare/Dockerfile-serve-models-api
+        ports:
+          - "8001:8001"
+        depends_on:
+            clickhouse:
+                condition: service_healthy
+        volumes:
+            # Mount the model definitions directory to the container for watching
+            - ./../models:/usr/src/app/models
+
     clickhouse:
         image: clickhouse/clickhouse-server
         user: "101:101"

@@ -1,0 +1,10 @@
+# Serve /api/**/** to `select * from **.**` against clickhouse
+FROM node:latest
+WORKDIR /usr/src/app
+COPY ../.declare/serve-models-api .
+RUN npm install
+
+ENV NODE_ENV=production
+EXPOSE 8001
+
+CMD ["npx", "nodemon", "index.js"]

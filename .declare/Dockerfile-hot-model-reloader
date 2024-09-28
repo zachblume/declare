@@ -7,4 +7,4 @@ RUN npm install
 
 ENV NODE_ENV=production
 
-CMD ["npx", "nodemon", "index.js", "--watch", "models", "-e", "*"]
+CMD ["npx", "nodemon", "index.js", "--watch", "models/**/definition.sql", "-e", "*"]
