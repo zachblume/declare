@@ -17,14 +17,14 @@ function App() {
     },
     tooltip: {},
     xAxis: {
-      data: ['Category1', 'Category2', 'Category3', 'Category4', 'Category5']
+      data: data ? data.map(item => item.product_id) : []
     },
     yAxis: {},
     series: [
       {
         name: 'Sales',
         type: 'bar',
-        data: [5, 20, 36, 10, 10]
+        data: data ? data.map(item => item.amount) : []
       }
     ]
   };
@@ -33,7 +33,6 @@ function App() {
     <div>
       <h1>Hello world</h1>
       <ReactECharts option={barChartOptions} />
-      <pre>{JSON.stringify(data, null, 2)}</pre>
     </div>
   );
 }
