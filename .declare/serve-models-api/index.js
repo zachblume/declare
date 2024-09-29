@@ -1,6 +1,6 @@
-const express = require("express");
-const cors = require("cors"); // Import the cors package
-const { createClient } = require("@clickhouse/client");
+import { createClient } from "@clickhouse/client";
+import bun from "bun";
+
 const port = process.env.PORT ?? 8001;
 
 const db = createClient({
@@ -9,28 +9,56 @@ const db = createClient({
     password: process.env.CLICKHOUSE_PASSWORD ?? "",
 });
 
-async function main() {
-    const app = express();
+bun.serve({
+    port: port,
+    async fetch(req) {
+        // Enable CORS for all routes
+        const corsHeaders = {
+            'Access-Control-Allow-Origin': '*',
+            'Access-Control-Allow-Methods': 'GET, POST, OPTIONS',
+            'Access-Control-Allow-Headers': 'Content-Type',
+        };
 
-    app.use(cors()); // Enable CORS for all routes
-
-    app.get("/api/:database/:table", async (req, res) => {
-        const { database, table } = req.params;
-        const query = `SELECT * FROM ${database}.${table}`;
-
-        try {
-            const result = await db.query({ query });
-            const data = await result.json();
-            res.json(data);
-        } catch (err) {
-            console.error(`Error querying ${database}.${table}:`, err);
-            res.status(500).send("Internal Server Error");
+        // Handle CORS preflight requests
+        if (req.method === 'OPTIONS') {
+            return new Response(null, { headers: corsHeaders });
         }
-    });
 
-    app.listen(port, () => {
-        console.log(`Server is running on http://localhost:${port}`);
-    });
-}
+        const url = new URL(req.url);
+        const pathname = url.pathname;
 
-main().catch(console.error);
+        // Match the route /api/:database/:table
+        const match = pathname.match(/^\/api\/([^\/]+)\/([^\/]+)$/);
+
+        if (match && req.method === 'GET') {
+            const database = match[1];
+            const table = match[2];
+            const query = `SELECT * FROM ${database}.${table}`;
+
+            try {
+                const result = await db.query({ query });
+                const data = await result.json();
+
+                return new Response(JSON.stringify(data), {
+                    headers: {
+                        'Content-Type': 'application/json',
+                        ...corsHeaders,
+                    },
+                });
+            } catch (err) {
+                console.error(`Error querying ${database}.${table}:`, err);
+                return new Response("Internal Server Error", {
+                    status: 500,
+                    headers: corsHeaders,
+                });
+            }
+        }
+
+        return new Response("Not Found", { status: 404, headers: corsHeaders });
+    },
+    error(err) {
+        console.error(err);
+    },
+});
+
+console.log(`Server is running on http://localhost:${port}`);
