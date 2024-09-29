@@ -10,6 +10,8 @@ Focused on accelerating the develop, preview, ship workflow for analytics throug
 -   [x] Declaratively defined SQL models
     -   [x] File-based router convention for easy discovery
     -   [x] Views in dev, configurable materialization in prod
+    -   [ ] Co-located SQL tests
+    -   [ ] Pre-configured SQL syntax linting and formatting
 -   [x] Declaratively defined dashboards, written in React with component library
 -   [ ] Declarative ETL and other workflow management
     -   [ ] File-based router convention for easy discovery
@@ -18,5 +20,3 @@ Focused on accelerating the develop, preview, ship workflow for analytics throug
 -   [x] Auto-generated REST APIs for models
     -   [ ] JWT based authentication
 -   [ ] Schedule dashboard delivery with embedded previews via Slack and email
--   [ ] SQL tests
--   [ ] Pre-configured linting

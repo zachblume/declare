@@ -81,8 +81,10 @@ async function reloadModel({ shouldLog = false, ...event }) {
         await db.command({ query: createDatabaseSql });
         await db.command({ query: createViewSql });
     } catch (err) {
-        console.error(`Error while loading model ${database}.${table}:`, err);
-        throw err;
+        console.error(
+            `Error while loading model ${database}.${table}:`,
+            err.message
+        );
     }
 
     if (shouldLog) {

@@ -1,6 +1,6 @@
 .PHONY: default
 
-default: start open
+default: clean start open attachlogs
 
 open:
 	@until nc -z localhost 5173 > /dev/null 2>&1; do sleep 0.2; done
@@ -8,8 +8,11 @@ open:
 	@open http://localhost:5173
 
 start:
-	docker-compose -f .declare/docker-compose.yml up -d
+	docker-compose -f .declare/docker-compose.yml up --build -d
 	@echo "Monitoring models/**/*.sql to hot reload as views"
+
+attachlogs:
+	docker-compose -f .declare/docker-compose.yml logs --follow
 
 stop:
 	docker-compose -f .declare/docker-compose.yml stop
