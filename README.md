@@ -11,7 +11,7 @@ Focused on accelerating the develop, preview, ship workflow for analytics throug
     -   [x] File-based router convention for easy discovery
     -   [x] Views in dev, configurable materialization in prod
     -   [ ] Co-located SQL tests
-    -   [ ] Pre-configured SQL syntax linting and formatting
+    -   [x] Pre-configured SQL syntax linting and formatting
 -   [x] Declaratively defined dashboards, written in React with component library
 -   [ ] Declarative ETL and other workflow management
     -   [ ] File-based router convention for easy discovery
