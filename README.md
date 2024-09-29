@@ -12,6 +12,7 @@ Focused on accelerating the develop, preview, ship workflow for analytics throug
     -   [x] Views in dev, configurable materialization in prod
     -   [ ] Co-located SQL tests
     -   [x] Pre-configured SQL syntax linting and formatting
+    -   [ ] RBAC/permissions via posthook.sql files
 -   [x] Declaratively defined dashboards, written in React with component library
 -   [ ] Declarative ETL and other workflow management
     -   [ ] File-based router convention for easy discovery
@@ -20,5 +21,4 @@ Focused on accelerating the develop, preview, ship workflow for analytics throug
 -   [x] Auto-generated REST APIs for models
     -   [ ] JWT based authentication
 -   [ ] Schedule dashboard delivery with embedded previews via Slack and email
--   [ ] Role-Based Access Control for managing permissions
 -   [ ] Migrations for recording stateful non-analytic changes like landing table schema changes, and remediations
