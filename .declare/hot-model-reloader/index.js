@@ -1,5 +1,3 @@
-// Overwrites the db with models in models/**/*, this file executed every time
-// a file ending with definition.sql is changed
 import { watch, readFile } from "fs/promises";
 const fs = require("fs");
 const { createClient } = require("@clickhouse/client");
@@ -10,17 +8,38 @@ const db = createClient({
     password: process.env.CLICKHOUSE_PASSWORD ?? "",
 });
 
-// Watcher for file changes to models/**/**/definition.sql */
+// Map to hold debounce timers for each file
+const debounceMap = new Map();
+
+// Watcher for file changes to models/**/**/definition.sql
 async function main() {
     reloadAllModels();
     const watcher = watch("./", { recursive: true });
     for await (const event of watcher) {
         if (event.filename.endsWith("definition.sql")) {
-            reloadModel(event);
+            handleFileChange(event.filename);
         }
     }
 }
 main();
+
+function handleFileChange(filename) {
+    if (debounceMap.has(filename)) {
+        // Debounce: if there's a timeout already, we skip this event
+        return;
+    }
+
+    // Reload model immediately
+    reloadModel({ filename, shouldLog: false });
+
+    // Set debounce timer for the filename
+    const debounceTimeout = setTimeout(() => {
+        debounceMap.delete(filename);
+    }, 25); // Debounce delay of 10 milliseconds
+
+    // Store the timer in the map
+    debounceMap.set(filename, debounceTimeout);
+}
 
 async function reloadAllModels() {
     // Recursively list all files
