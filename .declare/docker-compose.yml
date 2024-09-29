@@ -52,8 +52,9 @@ services:
             - ./../models:/models
         entrypoint: >
             /bin/sh -c "
-                # Run sqlfluff fix silently
-                sqlfluff fix /models --dialect clickhouse  --show-lint-violations && \
+                # Run sqlfluff fix silently on all files initially
+                sqlfluff fix /models --dialect clickhouse --show-lint-violations && \
+                echo \"\" && \
 
                 # Update and install inotify-tools quietly
                 apt-get update -qq && \
@@ -65,8 +66,10 @@ services:
 
                 # Start the inotifywait loop silently
                 while true; do \
-                inotifywait -e modify -r /models > /dev/null 2>&1 && \
-                sqlfluff fix /models --dialect clickhouse  --show-lint-violations; \
+                    FILE=$$(inotifywait -e modify --format \"%w%f\" -r /models) > /dev/null 2>&1 && \
+                    echo \"\" && \
+                    sqlfluff fix \"$$FILE\" --dialect clickhouse --show-lint-violations; \
+                    echo \"\" \
                 done
             "
         restart: always
