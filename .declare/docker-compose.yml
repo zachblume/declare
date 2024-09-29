@@ -96,7 +96,8 @@ services:
             - ./temporal/dynamicconfig:/etc/temporal/config/dynamicconfig
         # Make docker compose stop faster by specifying the command to run/kill
         # explicitly
-        command: ["bash", "/start-temporal.sh"]
+        # command: ["bash", "/start-temporal.sh"]
+        # That's not quite right and makes it fail, ha
 
     # temporal-admin-tools:
     #   container_name: temporal-admin-tools

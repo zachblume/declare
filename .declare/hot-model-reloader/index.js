@@ -30,7 +30,7 @@ function handleFileChange(filename) {
     }
 
     // Reload model immediately
-    reloadModel({ filename, shouldLog: false });
+    reloadModel({ filename, shouldLog: true });
 
     // Set debounce timer for the filename
     const debounceTimeout = setTimeout(() => {
@@ -61,13 +61,12 @@ async function reloadAllModels() {
 
     triggerEventLogWrite();
 
-    console.log("Models reloaded");
+    console.log("Models loaded into local database");
 }
 
 async function reloadModel({ shouldLog = false, ...event }) {
     // Use bun api to reload a single model
     const file = event.filename;
-    console.log(`Reloading model: ${file}`);
     const matches = file.match(/models\/([^/]+)\/([^/]+)\/definition.sql/);
     const database = matches[1];
     const table = matches[2];
