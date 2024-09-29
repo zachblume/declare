@@ -1,10 +1,10 @@
 # This docker image listens for changes in models/* and overwrites the database
 # schema.
-FROM node:latest
+FROM oven/bun:1 AS base
 WORKDIR /usr/src/app
 COPY ../.declare/hot-model-reloader .
-RUN npm install
+RUN bun install
 
 ENV NODE_ENV=production
 
-CMD ["npx", "nodemon", "index.js", "--watch", "models/**/definition.sql", "-e", "*"]
+CMD ["bun", "--watch", "index.js"]
