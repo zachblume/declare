@@ -11,7 +11,12 @@ Focused on accelerating the develop, preview, ship workflow for analytics throug
     -   [x] File-based router convention for easy discovery
     -   [x] Views in dev, configurable materialization in prod
 -   [x] Declaratively defined dashboards, written in React with component library
--   [ ] Mange ETL configurations in SQL (`select * from postgres_connection.schema.table`)
+-   [ ] Declarative ETL and other workflow management
+    -   [ ] File-based router convention for easy discovery
+    -   [ ] Managed in SQL (`select * from postgres_connection.schema.table`)
+    -   [ ] Deployed to serverless functions, log sink
 -   [x] Auto-generated REST APIs for models
     -   [ ] JWT based authentication
 -   [ ] Schedule dashboard delivery with embedded previews via Slack and email
+-   [ ] SQL tests
+-   [ ] Pre-configured linting
