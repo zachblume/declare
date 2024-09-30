@@ -101,10 +101,10 @@ services:
             - hatchet_lite_postgres_data:/var/lib/postgresql/data
         healthcheck:
             test: ["CMD-SHELL", "pg_isready", "-d", "hatchet"]
-            interval: 10s
+            interval: 1s
             timeout: 10s
-            retries: 5
-            start_period: 10s
+            retries: 20
+            start_period: 5s
     hatchet-lite:
         image: ghcr.io/hatchet-dev/hatchet/hatchet-lite:latest
         ports:

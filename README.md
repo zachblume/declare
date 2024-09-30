@@ -1,12 +1,12 @@
 # Declare
 
-Declare is an open-source framework for data engineering & analytics, that comes with framework defined cloud infrastructure built on Clickhouse. It aims to be everything you need to develop, preview, and ship pipelines and analytics faster.
+Declare is an open-source framework for data engineering & analytics with framework-defined infrastructure built on Clickhouse. It aims to be everything you need to develop, preview, and ship pipelines and analytics faster.
 
 ## Values
 
 -   **Declarative**: Describe data models, dashboards, and workflows declaratively, i.e. by describing your desired end state instead of intermediary plumbing or orchestration logic
 -   **Hot reloading dev in miliseconds**: Instantly see changes to your models, dashboards, and workflows in your local environment
--   **Framework defined infrastructure**: Spend time writing business logic instead of setting up cloud resources
+-   **[Framework-defined infrastructure](https://vercel.com/blog/framework-defined-infrastructure)**: Spend time writing business logic instead of setting up and managing cloud resources
 -   **Convention over configuration**: Not hostile to extension and customization, but ackolwege 80% of data engineering work is currently repetitive solving of shared problems
 -   **All-in on Clickhouse**: It's the inspiration and base of the stack.
 
@@ -31,6 +31,15 @@ Declare is an open-source framework for data engineering & analytics, that comes
 -   [ ] Migrations management for recording stateful non-analytic changes like remediations
 -   [ ] Dashboard for managing Clickhouse
 -   [ ] CLI for linting, migrations, and deployment
+-   [ ] Workflows, pipelines, and internal command line tools
+    -   [x] Easy-to-write workflows in Python (backed by Hatchet)
+    -   [ ] Exposing triggers to materialize existing ETL configs and models
+    -   [ ] All workflows are both deployed to cloud infra and triggerable via a local CLI
+    -   [ ] Triggers
+        -   [ ] S3 files
+        -   [ ] Webhooks
+        -   [ ] Cron
+        -   [ ] SNS
 
 ## File structure set up by create-declare-app
 
