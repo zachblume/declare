@@ -1,28 +1,36 @@
 # Declare
 
-Declare is an open-source framework for data engineering & analytics, built on Clickhouse, with everything you need to develop, preview, and ship analytics faster:
+Declare is an open-source framework for data engineering & analytics, that comes with framework defined cloud infrastructure built on Clickhouse. It aims to be everything you need to develop, preview, and ship pipelines and analytics faster.
 
-- [x] All-in on Clickhouse as the base of the stack
-  - [ ] Hosted solution
-- [x] Hot reloading across the local full-stack environment - models, dashboards, and workflows
-- [ ] Instant branch environments on push for quicker collaboration and QA
-- [x] Declaratively defined SQL models
-  - [x] File-based router convention for easy discovery
-  - [x] Views in dev, configurable materialization in prod
-  - [ ] Co-located SQL tests
-  - [x] Pre-configured SQL syntax linting and formatting
-  - [ ] RBAC/permissions via posthook.sql files
-- [x] Declaratively defined dashboards, written in React with component library
-- [ ] Declarative ETL and other workflow management
-  - [ ] File-based router convention for easy discovery
-  - [ ] Managed in SQL (`select * from postgres_connection.schema.table`)
-  - [ ] Deployed to serverless functions, log sink
-- [x] Auto-generated REST APIs for models
-  - [ ] JWT based authentication
-- [ ] Schedule dashboard delivery with embedded previews via Slack and email
-- [ ] Migrations management for recording stateful non-analytic changes like remediations
-- [ ] Dashboard for managing Clickhouse
-- [ ] CLI for linting, migrations, and deployment
+## Values
+
+-   **Declarative**: Describe data models, dashboards, and workflows declaratively, i.e. by describing your desired end state instead of intermediary plumbing or orchestration logic
+-   **Hot reloading dev in miliseconds**: Instantly see changes to your models, dashboards, and workflows in your local environment
+-   **Framework defined infrastructure**: Spend time writing business logic instead of setting up cloud resources
+-   **Convention over configuration**: Not hostile to extension and customization, but ackolwege 80% of data engineering work is currently repetitive solving of shared problems
+-   **All-in on Clickhouse**: It's the inspiration and base of the stack.
+
+## Features
+
+-   [x] Hot reloading across the local full-stack environment - models, dashboards, and workflows
+-   [ ] Instant branch environments on push for quicker collaboration and QA
+-   [x] Declaratively defined SQL models
+    -   [x] File-based router convention for easy discovery
+    -   [x] Views in dev, configurable materialization in prod
+    -   [ ] Co-located SQL tests
+    -   [x] Pre-configured SQL syntax linting and formatting
+    -   [ ] RBAC/permissions via posthook.sql files
+-   [x] Declaratively defined dashboards, written in React with component library
+-   [ ] Declarative ETL and other workflow management
+    -   [ ] File-based router convention for easy discovery
+    -   [ ] Managed in SQL (`select * from postgres_connection.schema.table`)
+    -   [ ] Deployed to serverless functions, log sink
+-   [x] Auto-generated REST APIs for models
+    -   [ ] JWT based authentication
+-   [ ] Schedule dashboard delivery with embedded previews via Slack and email
+-   [ ] Migrations management for recording stateful non-analytic changes like remediations
+-   [ ] Dashboard for managing Clickhouse
+-   [ ] CLI for linting, migrations, and deployment
 
 ## File structure set up by create-declare-app
 
