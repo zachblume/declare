@@ -23,3 +23,28 @@ Declare is an open-source framework for data engineering & analytics, built on C
 -   [ ] Migrations management for recording stateful non-analytic changes like remediations
 -   [ ] Dashboard for managing Clickhouse
 -   [ ] CLI for linting, migrations, and deployment
+
+## File structure
+
+```
+├── Makefile
+├── README.md
+├── connections
+│   ├── egress
+│   └── ingress
+├── dashboards
+│   ├── orders.jsx
+│   └── package.json
+├── migrations
+│   └── 20240930_new_user.sql
+├── models
+│   ├── ecommerce
+│   │   ├── orders_moved_from_postgres
+│   │   │   ├── definition.sql
+│   │   │   ├── posthook.sql
+│   │   │   └── seed.json
+└── workflows
+    └── example
+        ├── definition.py
+        └── development.py
+```
