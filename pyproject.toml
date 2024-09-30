@@ -1,0 +1,7 @@
+[project]
+name = "declare"
+version = "0.1.0"
+description = "Open-source framework for doing data engineering & analytics development faster, built on Clickhouse"
+readme = "README.md"
+requires-python = ">=3.12"
+dependencies = []
