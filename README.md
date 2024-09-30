@@ -66,4 +66,24 @@ Declare is an open-source framework for data engineering & analytics with framew
         └── development.py
 ```
 
-##
+## Current progress / Get started
+
+This repo at the moment is a PoC.
+
+The goal is to provide a tool (`create-declare-app`) that will scaffold a new project with:
+
+-   the file structure of this repo
+-   and provide the Python and docker compose bindings
+    -   which are currently stored under the `.declare folder`
+
+Right now you can run:
+
+```bash
+make dev
+```
+
+And open http://localhost:5173/ecommerce/orders in your browser for an example.
+
+## License
+
+Will be AGPL or MIT - to be decided based on dependencies
