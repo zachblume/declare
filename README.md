@@ -1,11 +1,8 @@
 # Declare
 
-The open-source data engineering framework for Clickhouse.
+Declare is an open-source framework that gives you a dedicated Clickhouse data warehouse with everything you need to develop, preview, and ship analytics faster:
 
-Focused on accelerating the develop, preview, ship workflow for analytics through (1) declarative everything-as-code, and (2) speed.
-
--   [x] All-in on Clickhouse as the base of the stack, on local and cloud
--   [x] Hot reloading across the local full-stack environment, measured in miliseconds
+-   [x] Hot reloading across the local full-stack environment - models, dashboards, and workflows
 -   [ ] Instant branch environments on push for quicker collaboration and QA
 -   [x] Declaratively defined SQL models
     -   [x] File-based router convention for easy discovery
