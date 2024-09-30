@@ -21,4 +21,6 @@ Focused on accelerating the develop, preview, ship workflow for analytics throug
 -   [x] Auto-generated REST APIs for models
     -   [ ] JWT based authentication
 -   [ ] Schedule dashboard delivery with embedded previews via Slack and email
--   [ ] Migrations for recording stateful non-analytic changes like landing table schema changes, and remediations
+-   [ ] Migrations management for recording stateful non-analytic changes like remediations
+-   [ ] Dashboard for managing Clickhouse
+-   [ ] CLI for linting, migrations, and deployment
