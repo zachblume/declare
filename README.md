@@ -46,12 +46,14 @@ Declare is an open-source framework for data engineering & analytics with framew
 ```
 ├── Makefile
 ├── README.md
+├── pyproject.toml
+├── package.json
+├── package-lock.json
 ├── connections
 │   ├── egress
 │   └── ingress
 ├── dashboards
-│   ├── orders.jsx
-│   └── package.json
+│   └── orders.jsx
 ├── migrations
 │   └── 20240930_new_user.sql
 ├── models
