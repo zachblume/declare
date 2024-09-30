@@ -2,17 +2,14 @@ name: declare
 
 services:
     dashboards:
-        # Vite/react development server
+        build:
+            context: ../
+            dockerfile: .declare/Dockerfile-dashboards
         healthcheck:
             test: ["CMD", "curl", "-f", "http://localhost:5173/"]
             interval: 1s
             timeout: 10s
             retries: 5
-        restart: on-failure
-        build:
-            context: ../
-            dockerfile: .declare/Dockerfile-dashboards
-        container_name: dashboards
         ports:
             - "5173:5173"
         volumes:
@@ -20,21 +17,21 @@ services:
             - ./../dashboards:/usr/src/app/src/user_dashboards
             # Mount the model definitions directory to the container for watching as well
             - ./../models:/usr/src/app/src/models
+        restart: unless-stopped
 
     hot-model-reloader:
         build:
             context: ../
             dockerfile: .declare/Dockerfile-hot-model-reloader
-        container_name: hot-model-reloader
         depends_on:
             clickhouse:
                 condition: service_healthy
         volumes:
             # Mount the model definitions directory to the container for watching
             - ./../models:/usr/src/app/models
+        restart: unless-stopped
 
     serve-models-api:
-        container_name: serve-models-api
         build:
             context: ../
             dockerfile: .declare/Dockerfile-serve-models-api
@@ -43,9 +40,14 @@ services:
         depends_on:
             clickhouse:
                 condition: service_healthy
+        healthcheck:
+            test: ["CMD", "curl", "-f", "http://localhost:8001/"]
+            interval: 1s
+            timeout: 10s
+            retries: 5
+        restart: unless-stopped
 
     sql-linter:
-        container_name: sql-linter
         image: sqlfluff/sqlfluff:latest
         user: root # Run as root to gain necessary permissions
         volumes:
@@ -77,7 +79,6 @@ services:
     clickhouse:
         image: clickhouse/clickhouse-server
         user: "101:101"
-        container_name: clickhouse
         hostname: clickhouse
         ports:
             # The HTTP api
@@ -93,67 +94,116 @@ services:
         security_opt:
             - seccomp:unconfined
 
-    temporal-postgresql:
-        container_name: temporal-postgresql
+    postgres:
+        image: postgres:15.6
+        command: postgres -c 'max_connections=200'
+        restart: always
+        hostname: "postgres"
         environment:
-            POSTGRES_PASSWORD: temporal
-            POSTGRES_USER: temporal
-        image: postgres:latest
-        networks:
-            - temporal-network
+            - POSTGRES_USER=hatchet
+            - POSTGRES_PASSWORD=hatchet
+            - POSTGRES_DB=hatchet
         ports:
-            - 5432:5432
+            - "5435:5432"
         volumes:
-            - /var/lib/postgresql/data
-
-    temporal:
-        container_name: temporal
+            - hatchet_postgres_data:/var/lib/postgresql/data
+        healthcheck:
+            test: ["CMD-SHELL", "pg_isready", "-d", "hatchet"]
+            interval: 10s
+            timeout: 10s
+            retries: 5
+            start_period: 10s
+    rabbitmq:
+        image: "rabbitmq:3-management"
+        hostname: "rabbitmq"
+        ports:
+            - "5673:5672" # RabbitMQ
+            - "15673:15672" # Management UI
+        environment:
+            RABBITMQ_DEFAULT_USER: "user"
+            RABBITMQ_DEFAULT_PASS: "password"
+        volumes:
+            - "hatchet_rabbitmq_data:/var/lib/rabbitmq"
+            - "hatchet_rabbitmq.conf:/etc/rabbitmq/rabbitmq.conf" # Configuration file mount
+        healthcheck:
+            test: ["CMD", "rabbitmqctl", "status"]
+            interval: 10s
+            timeout: 10s
+            retries: 5
+    migration:
+        image: ghcr.io/hatchet-dev/hatchet/hatchet-migrate:latest
+        environment:
+            DATABASE_URL: "postgres://hatchet:hatchet@postgres:5432/hatchet"
         depends_on:
-            - temporal-postgresql
+            postgres:
+                condition: service_healthy
+    setup-config:
+        image: ghcr.io/hatchet-dev/hatchet/hatchet-admin:latest
+        command: /hatchet/hatchet-admin quickstart --skip certs --generated-config-dir /hatchet/config --overwrite=false
         environment:
-            - DB=postgres12
-            - DB_PORT=5432
-            - POSTGRES_USER=temporal
-            - POSTGRES_PWD=temporal
-            - POSTGRES_SEEDS=temporal-postgresql
-            - DYNAMIC_CONFIG_FILE_PATH=config/dynamicconfig/development-sql.yaml
-        image: temporalio/auto-setup:latest
-        networks:
-            - temporal-network
-        ports:
-            - 7233:7233
+            DATABASE_URL: "postgres://hatchet:hatchet@postgres:5432/hatchet"
+            DATABASE_POSTGRES_PORT: "5432"
+            DATABASE_POSTGRES_HOST: "postgres"
+            SERVER_TASKQUEUE_RABBITMQ_URL: amqp://user:password@rabbitmq:5672/
+            SERVER_AUTH_COOKIE_DOMAIN: localhost:8080
+            SERVER_AUTH_COOKIE_INSECURE: "t"
+            SERVER_GRPC_BIND_ADDRESS: "0.0.0.0"
+            SERVER_GRPC_INSECURE: "t"
+            SERVER_GRPC_BROADCAST_ADDRESS: localhost:7077
         volumes:
-            - ./temporal/dynamicconfig:/etc/temporal/config/dynamicconfig
-        # Make docker compose stop faster by specifying the command to run/kill
-        # explicitly
-        # command: ["bash", "/start-temporal.sh"]
-        # That's not quite right and makes it fail, ha
+            - hatchet_certs:/hatchet/certs
+            - hatchet_config:/hatchet/config
+        depends_on:
+            migration:
+                condition: service_completed_successfully
+            rabbitmq:
+                condition: service_healthy
+            postgres:
+                condition: service_healthy
+    hatchet-engine:
+        image: ghcr.io/hatchet-dev/hatchet/hatchet-engine:latest
+        command: /hatchet/hatchet-engine --config /hatchet/config
+        restart: on-failure
+        depends_on:
+            setup-config:
+                condition: service_completed_successfully
+            migration:
+                condition: service_completed_successfully
+        ports:
+            - "7077:7070"
+        environment:
+            DATABASE_URL: "postgres://hatchet:hatchet@postgres:5432/hatchet"
+            SERVER_GRPC_BIND_ADDRESS: "0.0.0.0"
+            SERVER_GRPC_INSECURE: "t"
+        volumes:
+            - hatchet_certs:/hatchet/certs
+            - hatchet_config:/hatchet/config
+    hatchet-api:
+        image: ghcr.io/hatchet-dev/hatchet/hatchet-api:latest
+        command: /hatchet/hatchet-api --config /hatchet/config
+        restart: on-failure
+        depends_on:
+            setup-config:
+                condition: service_completed_successfully
+            migration:
+                condition: service_completed_successfully
+        environment:
+            DATABASE_URL: "postgres://hatchet:hatchet@postgres:5432/hatchet"
+        volumes:
+            - hatchet_certs:/hatchet/certs
+            - hatchet_config:/hatchet/config
+    hatchet-frontend:
+        image: ghcr.io/hatchet-dev/hatchet/hatchet-frontend:latest
+    caddy:
+        image: caddy:2.7.6-alpine
+        ports:
+            - 8080:8080
+        volumes:
+            - ./Hatchet-Caddyfile:/etc/caddy/Caddyfile
 
-    # temporal-admin-tools:
-    #   container_name: temporal-admin-tools
-    #   depends_on:
-    #     - temporal
-    #   environment:
-    #     - TEMPORAL_ADDRESS=temporal:7233
-    #     - TEMPORAL_CLI_ADDRESS=
-    #     - temporal-network
-    #   stdin_open: true
-    #   tty: true
-
-    # temporal-ui:
-    #   container_name: temporal-ui
-    #   depends_on:
-    #     - temporal
-    #   environment:
-    #     - TEMPORAL_ADDRESS=temporal:7233
-    #     - TEMPORAL_CORS_ORIGINS=http://localhost:3000
-    #   image: temporalio/ui:latest
-    #   networks:
-    #     - temporal-network
-    #   ports:
-    #     - 8080:8080
-
-networks:
-    temporal-network:
-        driver: bridge
-        name: temporal-network
+volumes:
+    hatchet_postgres_data:
+    hatchet_rabbitmq_data:
+    hatchet_rabbitmq.conf:
+    hatchet_config:
+    hatchet_certs:
