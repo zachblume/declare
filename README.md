@@ -24,7 +24,9 @@ Declare is an open-source framework for data engineering & analytics with framew
 -   [ ] Declarative ETL and other workflow management
     -   [ ] File-based router convention for easy discovery
     -   [ ] Managed in SQL (`select * from postgres_connection.schema.table`)
-    -   [ ] Deployed to serverless functions, log sink
+    -   [ ] Deployed as a regular Declare-managed workflow
+        -   [ ] Can be triggered and subscribed to from like any other step
+    -   [ ] Auto-subscribed to an event topic to allow easy triggering from workflows
 -   [x] Auto-generated REST APIs for models
     -   [ ] JWT based authentication
 -   [ ] Schedule dashboard delivery with embedded previews via Slack and email
@@ -33,13 +35,15 @@ Declare is an open-source framework for data engineering & analytics with framew
 -   [ ] CLI for linting, migrations, and deployment
 -   [ ] Workflows, pipelines, and internal command line tools
     -   [x] Easy-to-write workflows in Python (backed by Hatchet)
-    -   [ ] Exposing triggers to materialize existing ETL configs and models
+    -   [ ] Exposing trigger API to materialize existing ETL configs and models
     -   [ ] All workflows are both deployed to cloud infra and triggerable via a local CLI
     -   [ ] Triggers
-        -   [ ] S3 files
         -   [ ] Webhooks
         -   [ ] Cron
         -   [ ] SNS
+-   [ ] Log sink
+    -   [ ] S3
+    -   [ ] Datadog
 
 ## File structure set up by create-declare-app
 
