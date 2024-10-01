@@ -97,8 +97,8 @@ services:
             - POSTGRES_USER=hatchet
             - POSTGRES_PASSWORD=hatchet
             - POSTGRES_DB=hatchet
-        volumes:
-            - hatchet_lite_postgres_data:/var/lib/postgresql/data
+        # volumes:
+        #     - hatchet_lite_postgres_data:/var/lib/postgresql/data
         healthcheck:
             test: ["CMD-SHELL", "pg_isready", "-d", "hatchet"]
             interval: 1s
@@ -116,9 +116,9 @@ services:
         environment:
             RABBITMQ_DEFAULT_USER: "user"
             RABBITMQ_DEFAULT_PASS: "password"
-            DATABASE_URL: "postgresql://hatchet:hatchet@phatchet-ostgres:5432/hatchet?sslmode=disable"
+            DATABASE_URL: "postgresql://hatchet:hatchet@hatchet-postgres:5432/hatchet?sslmode=disable"
             DATABASE_POSTGRES_PORT: "5432"
-            DATABASE_POSTGRES_HOST: "postgres"
+            DATABASE_POSTGRES_HOST: "hatchet-postgres"
             SERVER_TASKQUEUE_RABBITMQ_URL: amqp://user:password@localhost:5672/
             SERVER_AUTH_COOKIE_DOMAIN: localhost
             SERVER_AUTH_COOKIE_INSECURE: "t"
