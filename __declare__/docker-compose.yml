@@ -167,6 +167,7 @@ services:
         volumes:
             - "hatchet_lite_rabbitmq_data:/var/lib/rabbitmq/mnesia"
             - "hatchet_lite_config:/config"
+        attach: false
 
 volumes:
     hatchet_lite_postgres_data:
