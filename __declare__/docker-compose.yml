@@ -84,6 +84,7 @@ services:
         depends_on:
             hatchet-lite:
                 condition: service_healthy
+        network_mode: "host" # Use host networking to access localhost:7077
         # healthcheck:
         #     test: ["CMD", "curl", "-f", "http://localhost:5173/"]
         #     interval: 1s
