@@ -30,6 +30,11 @@ bun.serve({
         // Match the route /api/:database/:table
         const match = pathname.match(/^\/api\/([^\/]+)\/([^\/]+)$/);
 
+        // Return 200 to root
+        if (pathname === '/') {
+            return new Response("OK", { headers: corsHeaders });
+        }
+
         if (match && req.method === 'GET') {
             const database = match[1];
             const table = match[2];
