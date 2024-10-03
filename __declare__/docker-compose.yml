@@ -56,7 +56,7 @@ services:
         entrypoint: >
             /bin/sh -c "
                 # Run sqlfluff fix silently on all files initially
-                sqlfluff fix /models --dialect clickhouse --show-lint-violations && \
+                sqlfluff lint /models --dialect clickhouse --show-lint-violations && \
                 echo \"\" && \
 
                 # Update and install inotify-tools quietly
@@ -71,7 +71,7 @@ services:
                 while true; do \
                     FILE=$$(inotifywait -e modify --format \"%w%f\" -r /models) > /dev/null 2>&1 && \
                     echo \"\" && \
-                    sqlfluff fix \"$$FILE\" --dialect clickhouse --show-lint-violations; \
+                    sqlfluff lint \"$$FILE\" --dialect clickhouse --show-lint-violations; \
                     echo \"\" \
                 done
             "
@@ -86,8 +86,6 @@ services:
                 condition: service_healthy
         # Use host networking to allow access to localhost:7077
         network_mode: "host"
-        ports:
-            - "9999:9999"
         volumes:
             - ./../workflows:/usr/src/app/workflows
         restart: unless-stopped
@@ -125,7 +123,7 @@ services:
             interval: 1s
             timeout: 10s
             retries: 20
-            start_period: 5s
+            start_period: 1s
     hatchet-lite:
         container_name: hatchet-lite
         image: ghcr.io/hatchet-dev/hatchet/hatchet-lite:latest
@@ -137,7 +135,7 @@ services:
                 condition: service_healthy
         healthcheck:
             test: ["CMD", "curl", "-f", "http://localhost:8888/"]
-            interval: 1s
+            interval: 10s
             timeout: 10s
             retries: 5
         environment:

@@ -5,4 +5,4 @@ RUN pip install uv
 RUN uv sync --frozen
 EXPOSE 9999
 
-CMD ["uv", "run", "watchmedo", "auto-restart", "--patterns=workflows/**/*.py", "--signal=SIGKILL", "--recursive", "--", "uv", "run", "python", "-m", "__declare__.workflows.main"]
+CMD ["uv", "run", "watchmedo", "auto-restart", "--patterns=workflows/**/*.py", "--signal=SIGKILL", "--recursive", "--kill-after", "0", "-d", "workflows", "--", "uv", "run", "python", "-m", "__declare__.workflows.main"]

@@ -1,7 +1,7 @@
 from __declare__.workflows.client import Workflows
 
 @Workflows.workflow(on_events=["tutorial:create"], name="first-workflow")
-class FirstWorkflow:
+class ExampleWorkflow:
 
     @Workflows.step(name="first_step")
     def first_step(self, ctx):
@@ -12,3 +12,4 @@ class FirstWorkflow:
     def second_step(self, ctx):
         print("second step worked as well")
         return {"result": "success2"}
+        
