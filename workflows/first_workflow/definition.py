@@ -13,13 +13,3 @@ class FirstWorkflow:
     def second_step(self, ctx):
         print("second step worked as well")
         return {"result": "success2"}
-    
-
-# def main():
-#     worker = Workflows.worker("tutorial-worker")
-#     worker.register_workflow(FirstWorkflow())
-#     worker.start()
-
-
-# if __name__ == "__main__":
-#     main()

@@ -76,6 +76,25 @@ services:
                 done
             "
         restart: always
+    workflow-worker:
+        container_name: workflow-worker
+        build:
+            context: ../
+            dockerfile: __declare__/Dockerfile-workflow-worker
+        depends_on:
+            hatchet-lite:
+                condition: service_healthy
+        # healthcheck:
+        #     test: ["CMD", "curl", "-f", "http://localhost:5173/"]
+        #     interval: 1s
+        #     timeout: 10s
+        #     retries: 5
+        ports:
+            - "9999:9999"
+        # volumes:
+        #     # Mount the dashboards source directory to the container for watching
+        #     - ./../dashboards:/usr/src/app/src/user_dashboards
+        restart: unless-stopped
     clickhouse:
         container_name: clickhouse
         image: clickhouse/clickhouse-server
@@ -112,6 +131,7 @@ services:
             retries: 20
             start_period: 5s
     hatchet-lite:
+        container_name: hatchet-lite
         image: ghcr.io/hatchet-dev/hatchet/hatchet-lite:latest
         ports:
             - "8888:8888"
@@ -119,6 +139,11 @@ services:
         depends_on:
             hatchet-postgres:
                 condition: service_healthy
+        healthcheck:
+            test: ["CMD", "curl", "-f", "http://localhost:8888/"]
+            interval: 1s
+            timeout: 10s
+            retries: 5
         environment:
             RABBITMQ_DEFAULT_USER: "user"
             RABBITMQ_DEFAULT_PASS: "password"
