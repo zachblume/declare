@@ -80,7 +80,7 @@ The goal is to provide a tool (`create-declare-app`) that will scaffold a new pr
 
 -   the file structure of this repo
 -   and provide the Python and docker compose bindings
-    -   which are currently stored under the `.declare folder`
+    -   which are currently stored under the `declare folder`
 
 Right now you can run:
 

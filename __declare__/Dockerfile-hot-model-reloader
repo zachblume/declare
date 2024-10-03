@@ -2,7 +2,7 @@
 # schema.
 FROM oven/bun:1 AS base
 WORKDIR /usr/src/app
-COPY ../.declare/hot-model-reloader .
+COPY ../__declare__/hot-model-reloader .
 RUN bun install
 
 ENV NODE_ENV=production

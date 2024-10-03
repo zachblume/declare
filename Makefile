@@ -8,23 +8,23 @@ open:
 	@open http://localhost:5173
 
 start:
-	docker-compose -f .declare/docker-compose.yml up --build -d
+	docker-compose -f __declare__/docker-compose.yml up --build -d
 	@echo "Monitoring models/**/*.sql to hot reload as views"
 
 attachlogs:
-	docker-compose -f .declare/docker-compose.yml logs --follow
+	docker-compose -f __declare__/docker-compose.yml logs --follow
 
 stop:
-	docker-compose -f .declare/docker-compose.yml stop
+	docker-compose -f __declare__/docker-compose.yml stop
 
 restart:
-	docker-compose -f .declare/docker-compose.yml restart
+	docker-compose -f __declare__/docker-compose.yml restart
 
 clean:
-	docker-compose -f .declare/docker-compose.yml down
-	docker-compose -f .declare/docker-compose.yml rm -f
+	docker-compose -f __declare__/docker-compose.yml down
+	docker-compose -f __declare__/docker-compose.yml rm -f
 
 dev: clean dev-up
 
 dev-up:
-	docker-compose -f .declare/docker-compose.yml up --build
+	docker-compose -f __declare__/docker-compose.yml up --build

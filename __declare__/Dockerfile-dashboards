@@ -1,6 +1,6 @@
 FROM node:20
 WORKDIR /usr/src/app
-COPY .declare/dashboards .
+COPY __declare__/dashboards .
 COPY package* .
 RUN npm install
 

@@ -1,7 +1,7 @@
 # Serve /api/**/** to `select * from **.**` against clickhouse
 FROM oven/bun:1 AS base
 WORKDIR /usr/src/app
-COPY ../.declare/serve-models-api .
+COPY ../__declare__/serve-models-api .
 RUN bun install
 
 ENV NODE_ENV=production
