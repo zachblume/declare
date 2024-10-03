@@ -15,11 +15,11 @@ class FirstWorkflow:
         return {"result": "success2"}
     
 
-def main():
-    worker = Workflows.worker("tutorial-worker")
-    worker.register_workflow(FirstWorkflow())
-    worker.start()
+# def main():
+#     worker = Workflows.worker("tutorial-worker")
+#     worker.register_workflow(FirstWorkflow())
+#     worker.start()
 
 
-if __name__ == "__main__":
-    main()
+# if __name__ == "__main__":
+#     main()
