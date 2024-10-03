@@ -55,8 +55,8 @@ services:
             - ./../models:/models
         entrypoint: >
             /bin/sh -c "
-                # Run sqlfluff fix silently on all files initially
-                sqlfluff lint /models --dialect clickhouse --show-lint-violations && \
+                # Run sqlfluff lint silently on all files initially
+                sqlfluff lint /models --dialect clickhouse && \
                 echo \"\" && \
 
                 # Update and install inotify-tools quietly
@@ -71,7 +71,7 @@ services:
                 while true; do \
                     FILE=$$(inotifywait -e modify --format \"%w%f\" -r /models) > /dev/null 2>&1 && \
                     echo \"\" && \
-                    sqlfluff lint \"$$FILE\" --dialect clickhouse --show-lint-violations; \
+                    sqlfluff lint \"$$FILE\" --dialect clickhouse; \
                     echo \"\" \
                 done
             "
