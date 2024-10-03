@@ -84,17 +84,12 @@ services:
         depends_on:
             hatchet-lite:
                 condition: service_healthy
-        network_mode: "host" # Use host networking to access localhost:7077
-        # healthcheck:
-        #     test: ["CMD", "curl", "-f", "http://localhost:5173/"]
-        #     interval: 1s
-        #     timeout: 10s
-        #     retries: 5
+        # Use host networking to allow access to localhost:7077
+        network_mode: "host"
         ports:
             - "9999:9999"
-        # volumes:
-        #     # Mount the dashboards source directory to the container for watching
-        #     - ./../dashboards:/usr/src/app/src/user_dashboards
+        volumes:
+            - ./../workflows:/usr/src/app/workflows
         restart: unless-stopped
     clickhouse:
         container_name: clickhouse

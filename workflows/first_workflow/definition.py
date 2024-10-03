@@ -1,4 +1,3 @@
-# Import hatchet from __declare__/Workflows/register.py
 from __declare__.workflows.client import Workflows
 
 @Workflows.workflow(on_events=["tutorial:create"], name="first-workflow")

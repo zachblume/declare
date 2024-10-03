@@ -7,4 +7,5 @@ requires-python = ">=3.12"
 dependencies = [
     "hatchet-sdk>=0.38.1",
     "python-dotenv>=1.0.1",
+    "watchdog>=5.0.3",
 ]
