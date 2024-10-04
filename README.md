@@ -1,55 +1,55 @@
 # Declare
 
-Declare is an open-source framework for data engineering & analytics with framework-defined infrastructure built on Clickhouse. It aims to be everything you need to develop, preview, and ship pipelines and analytics faster.
+Declare is an open-source framework for data engineering with framework-defined infrastructure built on Clickhouse. It aims to be everything you need to develop, preview, and ship data pipelines and analytics faster.
 
 ## Values
 
+-   **All-in on Clickhouse**: It's the inspiration and base of the stack
 -   **Declarative**: Describe data models, dashboards, and workflows declaratively, i.e. by describing your desired end state instead of intermediary plumbing or orchestration logic
 -   **Hot reloading dev in miliseconds**: Instantly see changes to your models, dashboards, and workflows in your local environment
--   **[Framework-defined infrastructure](https://vercel.com/blog/framework-defined-infrastructure)**: Spend time writing business logic instead of setting up and managing cloud resources
--   **Convention over configuration**: Not hostile to extension and customization, but ackolwege 80% of data engineering work is currently repetitive solving of shared problems
--   **All-in on Clickhouse**: It's the inspiration and base of the stack.
+-   **[Framework-defined infrastructure](https://vercel.com/blog/framework-defined-infrastructure)**: Spend time writing business logic instead of configuring cloud resources
+-   **Convention over configuration**: 80% of data engineering work is currently repetitive solving of shared problems
+-   **Fully open-source**: Assembling a framework out of a stack of open-source production-ready tools
+-   **Everything-as-code**: All logic lives in code and UIs are only for observability
 
 ## Features
 
--   [x] Hot reloading across the local full-stack environment - models, dashboards, and workflows
--   [ ] Instant branch environments on push for quicker collaboration and QA
--   [x] Declaratively defined SQL models
-    -   [x] File-based router convention for easy discovery
+-   [x] Full-stack hot reloading: models, dashboards, and workflows
+-   [ ] Declaratively defined SQL models
+    -   [x] File-based router like `models/dbname/tablename.sql` makes namespace reasoning easy
     -   [x] Views in dev, configurable materialization in prod
-    -   [ ] Co-located SQL tests
     -   [x] Pre-configured SQL syntax linting and formatting
+    -   [ ] Co-located SQL tests
     -   [ ] RBAC/permissions via posthook.sql files
--   [x] Declaratively defined dashboards, written in React with component library
+-   [ ] Declaratively defined React dashboards
+    -   [x] File-based router convention for easy discovery
+    -   [ ] Component library for charts and tables
+    -   [ ] Scheduled delivery with embedded previews via Slack and email
 -   [ ] Declarative ETL and other workflow management
-    -   [ ] File-based router convention for easy discovery
     -   [ ] Managed in SQL (`select * from postgres_connection.schema.table`)
-    -   [ ] Deployed as a regular Declare-managed workflow
-        -   [ ] Can be triggered and subscribed to from like any other step
-    -   [ ] Auto-subscribed to an event topic to allow easy triggering from workflows
+    -   [ ] Deployed as a regular Declare-managed python workflow
+        -   [ ] Can be triggered from, and subscribed to by, other workflows -- the same as any other workflow
 -   [x] Auto-generated REST APIs for models
+    -   [x] Layer provides secure interace to Clickhouse
     -   [ ] JWT based authentication
--   [ ] Schedule dashboard delivery with embedded previews via Slack and email
--   [ ] Migrations management for recording stateful non-analytic changes like remediations
--   [ ] Dashboard for managing Clickhouse
--   [ ] CLI for linting, migrations, and deployment
--   [ ] Workflows, pipelines, and internal command line tools
-    -   [x] Easy-to-write workflows in Python (backed by Hatchet)
-    -   [ ] Exposing trigger API to materialize existing ETL configs and models
-    -   [ ] All workflows are both deployed to cloud infra and triggerable via a local CLI
-    -   [ ] Triggers
-        -   [ ] Webhooks
+-   [ ] Studio for managing Clickhouse and workflows
+-   [ ] CLI for linting, stateful DB migrations, and deployment
+-   [ ] Workflow engine
+    -   [x] Easy-to-write Python SDK backed by [Hatchet](https://hatchet.run/)
+    -   [ ] Build internal tools instead of CLIs: Declare CLI allows triggering workflows and tailing their output
+    -   [ ] Trigger workflows from:
+        -   [ ] Other workflows
+        -   [ ] Webhook-compatible REST API
         -   [ ] Cron
-        -   [ ] SNS
--   [ ] Log sink
-    -   [ ] S3
+-   [ ] Log sink all services
     -   [ ] Datadog
+    -   [ ] S3
 
 ## File structure set up by create-declare-app
 
-```
+```bash
+├── __declare__  # SDK binding mocks and docker config
 ├── Makefile
-├── README.md
 ├── pyproject.toml
 ├── package.json
 ├── package-lock.json
@@ -90,6 +90,6 @@ make dev
 
 And open http://localhost:5173/ecommerce/orders in your browser for an example.
 
-## License
+## Open Source License
 
-Will be AGPL or MIT - to be decided based on dependencies
+Declare's [LICENSE](LICENSE) is Apache 2.0
