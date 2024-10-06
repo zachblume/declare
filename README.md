@@ -67,9 +67,7 @@ Declare is an open-source framework for data engineering with framework-defined 
 │   │   │   ├── posthook.sql
 │   │   │   └── seed.json
 └── workflows
-    └── example
-        ├── definition.py
-        └── development.py
+    └── example_workflow.py
 ```
 
 ## Current progress / Get started
