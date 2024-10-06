@@ -1,0 +1,14 @@
+type: postgres
+host: localhost
+port: 5432
+database: postgres
+user: postgres
+password: postgres
+
+workflows:
+    - name: final_rollup
+      source_database: ecommerce
+      source_table_name: orders
+      destination_schema: public
+      destination_table_name: final_rollup
+      strategy: full_refresh
