@@ -13,3 +13,5 @@ class ExampleWorkflow:
         print("second step worked as well")
         return {"result": "success2"}
         
+# Test event:
+# Workflows.event.push("user:create", {"test": "test"})
