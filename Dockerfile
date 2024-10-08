@@ -1,28 +1,28 @@
-# Use the official Docker-in-Docker image as the base
-FROM docker:dind
+FROM ubuntu:22.04
 
-# Install necessary packages for Docker Compose
-RUN apk add --no-cache \
-    py-pip \
-    python3-dev \
-    libffi-dev \
-    openssl-dev \
-    gcc \
-    libc-dev \
-    make \
-    curl
+# Add Docker's official GPG key:
+RUN apt-get update
+RUN apt-get install ca-certificates curl -y
+RUN install -m 0755 -d /etc/apt/keyrings
+RUN curl -fsSL https://download.docker.com/linux/ubuntu/gpg -o /etc/apt/keyrings/docker.asc
+RUN chmod a+r /etc/apt/keyrings/docker.asc
 
-# Install Docker Compose
-RUN curl -SL https://github.com/docker/compose/releases/download/v2.29.6/docker-compose-linux-x86_64 -o /usr/local/bin/docker-compose
+# Add the repository to Apt sources:
+RUN echo \
+    "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.asc] https://download.docker.com/linux/ubuntu \
+    $(. /etc/os-release && echo "$VERSION_CODENAME") stable" | \
+    tee /etc/apt/sources.list.d/docker.list > /dev/null
+RUN apt-get update
 
-# Change working directory
+RUN apt-get install docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin -y
+
+# Copy your docker-compose.yml
+COPY __declare__/docker-compose.yml /app/__declare__/docker-compose.yml
+COPY entrypoint.sh /app/entrypoint.sh
+RUN chmod +x /app/entrypoint.sh
+
+# Expose port 8080
+EXPOSE 5731
+
 WORKDIR /app
-
-# Copy everything including your Docker Compose configuration into the container
-COPY . .
-
-# # Copy the entrypoint script into the container
-RUN chmod +x entrypoint.sh
-
-# # Set the entrypoint to your script
 ENTRYPOINT ["/app/entrypoint.sh"]
