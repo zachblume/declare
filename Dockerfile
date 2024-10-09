@@ -1,3 +1,4 @@
+# syntax = docker/dockerfile:experimental
 FROM ubuntu:22.04
 
 # Add Docker's official GPG key:
@@ -25,4 +26,4 @@ RUN chmod +x /app/entrypoint.sh
 EXPOSE 5731
 
 WORKDIR /app
-ENTRYPOINT ["/app/entrypoint.sh"]
+CMD ["entrypoint.sh"]
