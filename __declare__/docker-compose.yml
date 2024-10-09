@@ -4,7 +4,10 @@ services:
     dashboards:
         container_name: dashboards
         # Instead of building, lets use the pre-built image at  registry.fly.io/declare-on-fly:latest
+        #
+        # TODO: This below needs some basic auth with flyio registry...
         image: registry.fly.io/declare-on-fly:latest
+        #
         # build:
         #     context: ../
         #     dockerfile: __declare__/Dockerfile-dashboards
