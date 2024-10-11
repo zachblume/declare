@@ -1,7 +1,14 @@
-import "./App.css";
+import routes from "~react-pages";
+import { useRoutes } from "react-router-dom";
+import { Suspense } from "react";
+import { GlobalLayout } from "./components/GlobalLayout";
 
-function App() {
-    return <>hi</>;
+export function App() {
+    return (
+        <GlobalLayout>
+            <Suspense fallback={<p>Loading...</p>}>
+                {useRoutes(routes)}
+            </Suspense>
+        </GlobalLayout>
+    );
 }
-
-export default App;
