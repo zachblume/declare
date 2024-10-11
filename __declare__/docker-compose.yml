@@ -24,6 +24,29 @@ services:
                 npm install && \
                 npm run dev -- --host 0.0.0.0 --port 3000
             "
+    studio-api:
+        container_name: studio-api
+        build:
+            context: ../
+            dockerfile: __declare__/Dockerfile-studio-api
+        healthcheck:
+            test: ["CMD", "curl", "-f", "http://localhost:8000/"]
+            interval: 1s
+            timeout: 10s
+            retries: 5
+        ports:
+            - "8000:8000"
+        volumes:
+            - ./studio:/usr/src/app
+            - ./../models:/usr/src/app/mount/models
+            - ./../workflows:/usr/src/app/mount/workflows
+            - ./../dashboards:/usr/src/app/mount/user_dashboards
+        restart: unless-stopped
+        command: >
+            /bin/sh -c "
+                bun install && \
+                bun run --hot index.js
+            "
     dashboards:
         container_name: dashboards
         build:

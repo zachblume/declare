@@ -48,6 +48,7 @@ function Header() {
                 <TabNav.Link href="#">Models</TabNav.Link>
                 <TabNav.Link href="#">ETL</TabNav.Link>
                 <TabNav.Link href="#">Workflows</TabNav.Link>
+                <TabNav.Link href="#">Clickhouse</TabNav.Link>
                 <TabNav.Link href="#">Monitors</TabNav.Link>
                 <TabNav.Link href="#">Logs</TabNav.Link>
                 <TabNav.Link href="#">Settings</TabNav.Link>

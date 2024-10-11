@@ -1,0 +1,7 @@
+FROM oven/bun:latest
+WORKDIR /usr/src/app
+COPY __declare__/studio-api .
+RUN bun install
+EXPOSE 8000
+ENV NODE_ENV=development
+CMD ["bun", "--hot", "index.js"]
