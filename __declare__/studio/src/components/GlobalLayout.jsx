@@ -1,6 +1,14 @@
 import { Button, DropdownMenu } from "@radix-ui/themes";
 import { TabNav } from "@radix-ui/themes";
-import { Layers3Icon } from "lucide-react";
+import {
+    AlertCircle,
+    AlertOctagonIcon,
+    Layers2Icon,
+    Layers3Icon,
+    LayersIcon,
+    ShapesIcon,
+    TriangleAlert,
+} from "lucide-react";
 
 export function GlobalLayout({ children }) {
     return (
@@ -17,15 +25,17 @@ function Header() {
         <header className="bg-white flex flex-col py-3">
             <div className="flex justify-between items-center mb-2">
                 <div className="flex items-center space-x-2.5 px-4">
-                    <Layers3Icon
+                    <ShapesIcon
                         className="text-neutral-500 mt-0.5"
                         size={17}
-                        strokeWidth={1}
-                        color="red"
+                        strokeWidth={2}
+                        color="green"
                     />
                     <span className="text-neutral-700">Declare</span>
                     <span className="text-neutral-700 font-medium">/</span>
-                    <span className="text-neutral-700">Current Workspace</span>
+                    <span className="text-neutral-700 font-light">
+                        Current Workspace
+                    </span>
                 </div>
                 <div className="mx-3 w-6 h-6 rounded-full bg-gray-300 flex items-center justify-center">
                     <span className="text-white">U</span>

@@ -11,7 +11,7 @@ const app = createRoot(document.getElementById("root"));
 app.render(
     <StrictMode>
         <BrowserRouter>
-            <Theme accentColor="ruby" grayColor="olive">
+            <Theme accentColor="green" grayColor="olive">
                 <App />
             </Theme>
         </BrowserRouter>
