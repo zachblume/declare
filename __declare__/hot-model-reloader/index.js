@@ -55,8 +55,8 @@ async function reloadAllModels() {
     // Do it in parallel
     await Promise.all(
         models.map((model) =>
-            reloadModel({ filename: model.fullPath, shouldLog: false })
-        )
+            reloadModel({ filename: model.fullPath, shouldLog: false }),
+        ),
     );
 
     triggerEventLogWrite();
@@ -83,7 +83,7 @@ async function reloadModel({ shouldLog = false, ...event }) {
     } catch (err) {
         console.error(
             `Error while loading model ${database}.${table}:`,
-            err.message
+            err.message,
         );
     }
 

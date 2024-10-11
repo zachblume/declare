@@ -1,6 +1,24 @@
 name: declare
 
 services:
+    studio:
+        container_name: studio
+        build:
+            context: ../
+            dockerfile: __declare__/Dockerfile-studio
+        healthcheck:
+            test: ["CMD", "curl", "-f", "http://localhost:5173/"]
+            interval: 1s
+            timeout: 10s
+            retries: 5
+        ports:
+            - "3000:3000"
+        volumes:
+            - ./studio:/usr/src/app
+            - ./../models:/usr/src/app/mount/models
+            - ./../workflows:/usr/src/app/mount/workflows
+            - ./../dashboards:/usr/src/app/mount/user_dashboards
+        restart: unless-stopped
     dashboards:
         container_name: dashboards
         build:

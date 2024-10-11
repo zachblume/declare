@@ -17,5 +17,5 @@ app.render(
         <BrowserRouter>
             <App />
         </BrowserRouter>
-    </StrictMode>
+    </StrictMode>,
 );

@@ -14,13 +14,13 @@ bun.serve({
     async fetch(req) {
         // Enable CORS for all routes
         const corsHeaders = {
-            'Access-Control-Allow-Origin': '*',
-            'Access-Control-Allow-Methods': 'GET, POST, OPTIONS',
-            'Access-Control-Allow-Headers': 'Content-Type',
+            "Access-Control-Allow-Origin": "*",
+            "Access-Control-Allow-Methods": "GET, POST, OPTIONS",
+            "Access-Control-Allow-Headers": "Content-Type",
         };
 
         // Handle CORS preflight requests
-        if (req.method === 'OPTIONS') {
+        if (req.method === "OPTIONS") {
             return new Response(null, { headers: corsHeaders });
         }
 
@@ -31,11 +31,11 @@ bun.serve({
         const match = pathname.match(/^\/api\/([^\/]+)\/([^\/]+)$/);
 
         // Return 200 to root
-        if (pathname === '/') {
+        if (pathname === "/") {
             return new Response("OK", { headers: corsHeaders });
         }
 
-        if (match && req.method === 'GET') {
+        if (match && req.method === "GET") {
             const database = match[1];
             const table = match[2];
             const query = `SELECT * FROM ${database}.${table}`;
@@ -46,7 +46,7 @@ bun.serve({
 
                 return new Response(JSON.stringify(data), {
                     headers: {
-                        'Content-Type': 'application/json',
+                        "Content-Type": "application/json",
                         ...corsHeaders,
                     },
                 });
