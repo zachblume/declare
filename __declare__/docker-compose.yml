@@ -37,16 +37,11 @@ services:
         ports:
             - "8000:8000"
         volumes:
-            - ./studio:/usr/src/app
+            - ./studio-api:/usr/src/app
             - ./../models:/usr/src/app/mount/models
             - ./../workflows:/usr/src/app/mount/workflows
             - ./../dashboards:/usr/src/app/mount/user_dashboards
         restart: unless-stopped
-        command: >
-            /bin/sh -c "
-                bun install && \
-                bun run --hot index.js
-            "
     dashboards:
         container_name: dashboards
         build:
