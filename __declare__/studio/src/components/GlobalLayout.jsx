@@ -14,7 +14,7 @@ export function GlobalLayout({ children }) {
 
 function Header() {
     return (
-        <header className="bg-white py-4 flex flex-col">
+        <header className="bg-white flex flex-col py-3">
             <div className="flex justify-between items-center mb-2">
                 <div className="flex items-center space-x-2.5 px-4">
                     <Layers3Icon
@@ -23,9 +23,12 @@ function Header() {
                         strokeWidth={1}
                         color="red"
                     />
-                    <span className="text-neutral-700">Workspace</span>
+                    <span className="text-neutral-700">Declare</span>
                     <span className="text-neutral-700 font-medium">/</span>
                     <span className="text-neutral-700">Current Workspace</span>
+                </div>
+                <div className="mx-3 w-6 h-6 rounded-full bg-gray-300 flex items-center justify-center">
+                    <span className="text-white">U</span>
                 </div>
             </div>
             <TabNav.Root>
@@ -33,8 +36,10 @@ function Header() {
                     Dashboards
                 </TabNav.Link>
                 <TabNav.Link href="#">Models</TabNav.Link>
-                <TabNav.Link href="#">Connections</TabNav.Link>
+                <TabNav.Link href="#">ETL</TabNav.Link>
                 <TabNav.Link href="#">Workflows</TabNav.Link>
+                <TabNav.Link href="#">Monitors</TabNav.Link>
+                <TabNav.Link href="#">Logs</TabNav.Link>
                 <TabNav.Link href="#">Settings</TabNav.Link>
                 <div className="ml-auto mr-2">
                     <DropdownMenu.Root>
