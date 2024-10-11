@@ -1,4 +1,6 @@
-.PHONY: dev
+.PHONY: default
+
+default: dev
 
 open:
 	@until nc -z localhost 5173 > /dev/null 2>&1; do sleep 0.2; done
