@@ -17,12 +17,10 @@ function loadRoutes(dir) {
         } else if (stat.isFile() && file.endsWith(".js")) {
             const route = require(fullPath);
             routes.push({
-                path:
-                    "/" +
-                    path
-                        .relative(routesPath, fullPath)
-                        .replace(/\\/g, "/")
-                        .replace(".js", ""),
+                path: path
+                    .relative(routesPath, fullPath)
+                    .replace(/\\/g, "/")
+                    .replace(".js", ""),
                 handler: route.default,
             });
         }
@@ -35,12 +33,17 @@ const server = serve({
     port,
     fetch(req) {
         const url = new URL(req.url);
-        const route = routes.find((r) => r.path === url.pathname);
+        let pathname = url.pathname.replace(/^\/+|\/+$/g, "");
+        let route = routes.find((r) => r.path === pathname);
+        if (!route) {
+            route = routes.find((r) => r.path === pathname + "/index");
+        }
         if (route) {
             return route.handler(req);
         }
+        console.log(`Not found: ${pathname}`, routes);
         return new Response("Not Found", { status: 404 });
     },
 });
 
-console.log(`Server running at http://localhost:${port}`);
+console.log(`Studio API server running at http://localhost:${port}`);
