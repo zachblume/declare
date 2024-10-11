@@ -1,4 +1,4 @@
-import { Table } from "@radix-ui/themes";
+import { DataGrid } from "components/DataGrid";
 
 export default function IndexPage() {
     const dashboards = [
@@ -11,30 +11,35 @@ export default function IndexPage() {
             name: "Finance Dashboard",
             description: "Financial health and metrics",
         },
+        {
+            name: "Product Dashboard",
+            description: "Product performance and metrics",
+        },
+        {
+            name: "Customer Dashboard",
+            description: "Customer engagement and metrics",
+        },
+        {
+            name: "Operations Dashboard",
+            description: "Operational metrics and performance",
+        },
+        {
+            name: "Engineering Dashboard",
+            description: "Engineering metrics and performance",
+        },
+        {
+            name: "HR Dashboard",
+            description: "Human resources metrics and performance",
+        },
     ];
 
     return (
-        <Table.Root size="1">
-            <Table.Header>
-                <Table.Row>
-                    <Table.ColumnHeaderCell className="!font-normal text-neutral-400">
-                        Name
-                    </Table.ColumnHeaderCell>
-                    <Table.ColumnHeaderCell className="!font-normal text-neutral-400">
-                        Description
-                    </Table.ColumnHeaderCell>
-                </Table.Row>
-            </Table.Header>
-            <Table.Body>
-                {dashboards.map((dashboard, index) => (
-                    <Table.Row key={index}>
-                        <Table.RowHeaderCell>
-                            {dashboard.name}
-                        </Table.RowHeaderCell>
-                        <Table.Cell>{dashboard.description}</Table.Cell>
-                    </Table.Row>
-                ))}
-            </Table.Body>
-        </Table.Root>
+        <DataGrid
+            columns={[
+                { header: "Name", accessor: "name" },
+                { header: "Description", accessor: "description" },
+            ]}
+            data={dashboards}
+        />
     );
 }

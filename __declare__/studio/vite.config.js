@@ -10,4 +10,11 @@ export default defineConfig({
             dirs: ["src/pages"],
         }),
     ],
+    resolve: {
+        alias: {
+            components: "/src/components",
+            pages: "/src/pages",
+            lib: "/src/lib",
+        },
+    },
 });
