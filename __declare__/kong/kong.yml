@@ -1,0 +1,23 @@
+_format_version: "2.1"
+_transform: true
+
+services:
+    - name: example-service
+      url: http://example.com
+      routes:
+          - name: example-route
+            paths:
+                - /
+
+plugins:
+    - name: key-auth
+      service: example-service
+      config:
+          key_names:
+              - apikey
+          hide_credentials: true
+
+consumers:
+    - username: example-consumer
+      keyauth_credentials:
+          - key: example-key

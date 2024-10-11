@@ -1,6 +1,29 @@
 name: declare
 
 services:
+    kong:
+        container_name: kong
+        image: kong:latest
+        environment:
+            KONG_DATABASE: "off"
+            KONG_DECLARATIVE_CONFIG: "/usr/local/kong/declarative/kong.yml"
+            KONG_PROXY_ACCESS_LOG: "/dev/stdout"
+            KONG_ADMIN_ACCESS_LOG: "/dev/stdout"
+            KONG_PROXY_ERROR_LOG: "/dev/stderr"
+            KONG_ADMIN_ERROR_LOG: "/dev/stderr"
+            KONG_ADMIN_LISTEN: "0.0.0.0:8001"
+            KONG_PROXY_LISTEN: "0.0.0.0:8000"
+        ports:
+            - "8000:8000"
+            - "8001:8001"
+        volumes:
+            - ./kong/kong.yml:/usr/local/kong/declarative/kong.yml
+        healthcheck:
+            test: ["CMD", "curl", "-f", "http://localhost:8001/status"]
+            interval: 10s
+            timeout: 10s
+            retries: 5
+        restart: unless-stopped
     studio:
         container_name: studio
         build:
@@ -17,7 +40,7 @@ services:
             - ./studio:/usr/src/app
             - ./../models:/usr/src/app/mount/models
             - ./../workflows:/usr/src/app/mount/workflows
-            - ./../dashboards:/usr/src/app/mount/user_dashboards
+            - ./../dashboards:/usr/src/app/mount/dashboards
         restart: unless-stopped
         command: >
             /bin/sh -c "
@@ -35,12 +58,12 @@ services:
             timeout: 10s
             retries: 5
         ports:
-            - "8000:8000"
+            - "9000:9000"
         volumes:
             - ./studio-api:/usr/src/app
             - ./../models:/usr/src/app/mount/models
             - ./../workflows:/usr/src/app/mount/workflows
-            - ./../dashboards:/usr/src/app/mount/user_dashboards
+            - ./../dashboards:/usr/src/app/mount/dashboards
         restart: unless-stopped
     dashboards:
         container_name: dashboards
@@ -56,7 +79,7 @@ services:
             - "5173:5173"
         volumes:
             # Mount the dashboards source directory to the container for watching
-            - ./../dashboards:/usr/src/app/src/user_dashboards
+            - ./../dashboards:/usr/src/app/src/dashboards
             # Mount the model definitions directory to the container for watching as well
             - ./../models:/usr/src/app/src/models
         restart: unless-stopped

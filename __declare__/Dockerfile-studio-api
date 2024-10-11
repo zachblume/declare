@@ -2,5 +2,5 @@ FROM oven/bun:latest
 WORKDIR /usr/src/app
 COPY __declare__/studio-api .
 RUN bun install
-EXPOSE 8000
+EXPOSE 9000
 CMD ["bun", "--hot", "index.js"]

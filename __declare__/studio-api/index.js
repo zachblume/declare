@@ -2,7 +2,7 @@ import { serve } from "bun";
 import fs from "fs";
 import path from "path";
 
-const port = process.env.PORT || 8000;
+const port = process.env.PORT || 9000;
 const routesPath = path.join(__dirname, "routes");
 
 const routes = [];
@@ -39,6 +39,7 @@ const server = serve({
             route = routes.find((r) => r.path === pathname + "/index");
         }
         if (route) {
+            console.debug(`Executing route handler for ${pathname}`);
             return route.handler(req);
         }
         console.log(`Not found: ${pathname}`, routes);
