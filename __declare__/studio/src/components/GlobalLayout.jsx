@@ -45,7 +45,7 @@ function Header() {
                 <TabNav.Link href="#a" active>
                     Dashboards
                 </TabNav.Link>
-                <TabNav.Link href="#">Models</TabNav.Link>
+                <TabNav.Link href="/models">Models</TabNav.Link>
                 <TabNav.Link href="#">ETL</TabNav.Link>
                 <TabNav.Link href="#">Workflows</TabNav.Link>
                 <TabNav.Link href="#">Database</TabNav.Link>
