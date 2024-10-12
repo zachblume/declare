@@ -8,7 +8,7 @@ import "@radix-ui/themes/styles.css";
 
 const app = createRoot(document.getElementById("root"));
 
-const jwtToken = process.env.DUMMY_JWT;
+const jwtToken = import.meta.env.VITE_DUMMY_JWT;
 
 app.render(
     <StrictMode>
