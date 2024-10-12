@@ -8,6 +8,8 @@ services:
           - name: studio-api-route
             paths:
                 - /api
+      plugins:
+          - name: cors
 
     - name: dashboards
       url: http://localhost:5173
@@ -15,6 +17,8 @@ services:
           - name: dashboards-route
             paths:
                 - /dashboards
+      plugins:
+          - name: cors
 
     - name: serve-models-api
       url: http://localhost:9002
@@ -22,6 +26,8 @@ services:
           - name: serve-models-api-route
             paths:
                 - /serve-models-api
+      plugins:
+          - name: cors
 
     - name: workflow-worker
       url: http://localhost:7077
@@ -29,6 +35,8 @@ services:
           - name: workflow-worker-route
             paths:
                 - /workflow-worker
+      plugins:
+          - name: cors
 
     - name: clickhouse
       url: http://localhost:8123
@@ -36,6 +44,8 @@ services:
           - name: clickhouse-route
             paths:
                 - /clickhouse
+      plugins:
+          - name: cors
 
     - name: hatchet-postgres
       url: http://localhost:5432
@@ -43,6 +53,8 @@ services:
           - name: hatchet-postgres-route
             paths:
                 - /hatchet-postgres
+      plugins:
+          - name: cors
 
     - name: hatchet-lite
       url: http://localhost:8888
@@ -50,18 +62,10 @@ services:
           - name: hatchet-lite-route
             paths:
                 - /hatchet-lite
-
-plugins:
-    - name: jwt
-      config:
-          key_claim_name: "iss"
-          secret_is_base64: false
-          run_on_preflight: false
+      plugins:
+          - name: cors
 
 consumers:
-    - username: example-consumer
+    - username: anon
       keyauth_credentials:
-          - key: example-key
-      jwt_secrets:
-          - key: example-key
-            secret: example-secret
+          - key: examplekey
