@@ -15,16 +15,13 @@ export default function IndexPage({ jwtToken }) {
         fetcher
     );
 
-    if (error) return <div>Failed to load dashboards</div>;
-    if (!dashboards) return <div>Loading...</div>;
-
     return (
         <DataGrid
             columns={[
                 { header: "Name", accessor: "name" },
                 { header: "Description", accessor: "description" },
             ]}
-            data={dashboards}
+            data={dashboards || []}
         />
     );
 }

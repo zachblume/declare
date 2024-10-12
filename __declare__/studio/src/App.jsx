@@ -6,7 +6,7 @@ import { GlobalLayout } from "components/GlobalLayout";
 export function App({ jwtToken }) {
     return (
         <GlobalLayout>
-            <Suspense>{useRoutes([...routes])}</Suspense>
+            <Suspense fallback={""}>{useRoutes([...routes])}</Suspense>
         </GlobalLayout>
     );
 }

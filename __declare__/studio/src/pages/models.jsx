@@ -15,16 +15,13 @@ export default function ModelsPage({ jwtToken }) {
         fetcher
     );
 
-    if (error) return <div>Failed to load models</div>;
-    if (!models) return <div>Loading...</div>;
-
     return (
         <DataGrid
             columns={[
                 { header: "Name", accessor: "name" },
                 { header: "Path", accessor: "path" },
             ]}
-            data={models}
+            data={models || []}
         />
     );
 }
