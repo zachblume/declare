@@ -2,22 +2,68 @@ _format_version: "2.1"
 _transform: true
 
 services:
-    - name: example-service
-      url: http://example.com
+    - name: studio-api
+      url: http://localhost:9000
       routes:
-          - name: example-route
+          - name: studio-api-route
             paths:
-                - /
+                - /api
+
+    - name: dashboards
+      url: http://localhost:5173
+      routes:
+          - name: dashboards-route
+            paths:
+                - /dashboards
+
+    - name: serve-models-api
+      url: http://localhost:9002
+      routes:
+          - name: serve-models-api-route
+            paths:
+                - /serve-models-api
+
+    - name: workflow-worker
+      url: http://localhost:7077
+      routes:
+          - name: workflow-worker-route
+            paths:
+                - /workflow-worker
+
+    - name: clickhouse
+      url: http://localhost:8123
+      routes:
+          - name: clickhouse-route
+            paths:
+                - /clickhouse
+
+    - name: hatchet-postgres
+      url: http://localhost:5432
+      routes:
+          - name: hatchet-postgres-route
+            paths:
+                - /hatchet-postgres
+
+    - name: hatchet-lite
+      url: http://localhost:8888
+      routes:
+          - name: hatchet-lite-route
+            paths:
+                - /hatchet-lite
 
 plugins:
-    - name: key-auth
-      service: example-service
+    - name: jwt
+      service: kong
       config:
-          key_names:
-              - apikey
-          hide_credentials: true
+          key_claim_name: "iss"
+          secret_is_base64: false
+          run_on_preflight: true
+
 
 consumers:
-    - username: example-consumer
-      keyauth_credentials:
-          - key: example-key
+  - username: example-consumer
+    keyauth_credentials:
+      - key: example-key
+    jwt_secrets:
+      - key: example-key
+        secret: example-secret
