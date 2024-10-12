@@ -16,6 +16,11 @@ services:
             KONG_PLUGINS: request-transformer,cors,key-auth,acl,basic-auth
             KONG_NGINX_PROXY_PROXY_BUFFER_SIZE: 160k
             KONG_NGINX_PROXY_PROXY_BUFFERS: 64 160k
+            # example placeholders:
+            ANON_KEY: ANON_KEY
+            SERVICE_KEY: SERVICE_KEY
+            DASHBOARD_USERNAME: DASHBOARD_USERNAME
+            DASHBOARD_PASSWORD: DASHBOARD_PASSWORD
         ports:
             - "8000:8000"
             - "8001:8001"
@@ -83,9 +88,11 @@ services:
         ports:
             - "5173:5173"
         volumes:
-            # Mount the dashboards source directory to the container for watching
+            # Mount the dashboards source directory to the container for
+            # watching
             - ./../dashboards:/usr/src/app/src/dashboards
-            # Mount the model definitions directory to the container for watching as well
+            # Mount the model definitions directory to the container for
+            # watching as well
             - ./../models:/usr/src/app/src/models
         restart: unless-stopped
     hot-model-reloader:
@@ -97,7 +104,8 @@ services:
             clickhouse:
                 condition: service_healthy
         volumes:
-            # Mount the model definitions directory to the container for watching
+            # Mount the model definitions directory to the container for
+            # watching
             - ./../models:/usr/src/app/models
         restart: unless-stopped
     serve-models-api:

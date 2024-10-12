@@ -4,7 +4,8 @@ import useSWR from "swr";
 const fetcher = ([url, jwtToken]) =>
     fetch(url, {
         headers: {
-            Authorization: `Bearer ${jwtToken}`,
+            // Authorization: `Bearer ${"jwtToken"}`,
+            apikey: "ANON_KEY",
         },
     }).then((res) => res.json());
 

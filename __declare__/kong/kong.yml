@@ -1,6 +1,35 @@
 _format_version: "2.1"
 _transform: true
 
+###
+### Consumers / Users
+###
+consumers:
+    - username: DASHBOARD
+    - username: anon
+      keyauth_credentials:
+          - key: ANON_KEY
+    - username: service_role
+      keyauth_credentials:
+          - key: $SERVICE_KEY
+
+###
+### Access Control List
+###
+acls:
+    - consumer: anon
+      group: anon
+    - consumer: service_role
+      group: admin
+
+###
+### Dashboard credentials
+###
+# basicauth_credentials:
+#     - consumer: DASHBOARD
+#       username: $DASHBOARD_USERNAME
+#       password: $DASHBOARD_PASSWORD
+
 services:
     - name: studio-api
       url: http://studio-api:9998
@@ -11,68 +40,12 @@ services:
                 - /api
       plugins:
           - name: cors
-
-    - name: dashboards
-      url: http://dashboards:5173
-      routes:
-          - name: dashboards-route
-            strip_path: true
-            paths:
-                - /dashboards
-      plugins:
-          - name: cors
-
-    - name: serve-models-api
-      url: http://serve-models-api:9002
-      routes:
-          - name: serve-models-api-route
-            strip_path: true
-            paths:
-                - /serve-models-api
-      plugins:
-          - name: cors
-
-    - name: workflow-worker
-      url: http://workflow-worker:7077
-      routes:
-          - name: workflow-worker-route
-            strip_path: true
-            paths:
-                - /workflow-worker
-      plugins:
-          - name: cors
-
-    - name: clickhouse
-      url: http://clickhouse:8123
-      routes:
-          - name: clickhouse-route
-            strip_path: true
-            paths:
-                - /clickhouse
-      plugins:
-          - name: cors
-
-    - name: hatchet-postgres
-      url: http://hatchet-postgres:5432
-      routes:
-          - name: hatchet-postgres-route
-            strip_path: true
-            paths:
-                - /hatchet-postgres
-      plugins:
-          - name: cors
-
-    - name: hatchet-lite
-      url: http://hatchet-lite:8888
-      routes:
-          - name: hatchet-lite-route
-            strip_path: true
-            paths:
-                - /hatchet-lite
-      plugins:
-          - name: cors
-
-consumers:
-    - username: example-consumer
-      keyauth_credentials:
-          - key: example-key
+          - name: key-auth
+            config:
+                hide_credentials: true
+          - name: acl
+            config:
+                hide_groups_header: true
+                allow:
+                    - admin
+                    - anon
