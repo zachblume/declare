@@ -1,7 +1,6 @@
-import React from 'react';
-import QueryEditor from '../components/QueryEditor';
-import TableMenu from '../components/TableMenu';
-import SavedQueries from '../components/SavedQueries';
+import QueryEditor from 'components/QueryEditor';
+import TableMenu from 'components/TableMenu';
+import SavedQueries from 'components/SavedQueries';
 
 const DatabasePage = () => {
     return (
