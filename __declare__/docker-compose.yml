@@ -46,8 +46,8 @@ services:
         restart: unless-stopped
         command: >
             /bin/sh -c "
-                npm install && \
-                npm run dev -- --host 0.0.0.0 --port 3000
+                bun install && \
+                bun run dev -- --host 0.0.0.0 --port 3000
             "
     studio-api:
         container_name: studio-api
