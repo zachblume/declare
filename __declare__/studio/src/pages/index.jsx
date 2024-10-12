@@ -1,7 +1,7 @@
 import { DataGrid } from "components/DataGrid";
 import useSWR from "swr";
 
-const fetcher = (url, jwtToken) =>
+const fetcher = ([url, jwtToken]) =>
     fetch(url, {
         headers: {
             Authorization: `Bearer ${jwtToken}`,

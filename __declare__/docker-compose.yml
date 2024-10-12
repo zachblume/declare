@@ -176,7 +176,7 @@ services:
                 ]
             interval: 1s
             timeout: 5s
-        restart: on-failure
+        restart: always
         security_opt:
             - seccomp:unconfined
     hatchet-postgres:
