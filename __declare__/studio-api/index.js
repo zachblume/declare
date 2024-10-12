@@ -2,7 +2,7 @@ import { serve } from "bun";
 import fs from "fs";
 import path from "path";
 
-const port = process.env.PORT || 9000;
+const port = process.env.PORT || 9998;
 const routesPath = path.join(__dirname, "routes");
 
 const routes = [];

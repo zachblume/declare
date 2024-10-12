@@ -3,7 +3,7 @@ _transform: true
 
 services:
     - name: studio-api
-      url: http://localhost:9000
+      url: http://localhost:9998
       routes:
           - name: studio-api-route
             paths:
@@ -53,17 +53,15 @@ services:
 
 plugins:
     - name: jwt
-      service: kong
       config:
           key_claim_name: "iss"
           secret_is_base64: false
           run_on_preflight: true
 
-
 consumers:
-  - username: example-consumer
-    keyauth_credentials:
-      - key: example-key
-    jwt_secrets:
-      - key: example-key
-        secret: example-secret
+    - username: example-consumer
+      keyauth_credentials:
+          - key: example-key
+      jwt_secrets:
+          - key: example-key
+            secret: example-secret
