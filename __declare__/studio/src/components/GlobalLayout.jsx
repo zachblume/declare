@@ -1,14 +1,6 @@
-import { Button, DropdownMenu } from "@radix-ui/themes";
 import { TabNav } from "@radix-ui/themes";
-import {
-    AlertCircle,
-    AlertOctagonIcon,
-    Layers2Icon,
-    Layers3Icon,
-    LayersIcon,
-    ShapesIcon,
-    TriangleAlert,
-} from "lucide-react";
+import { ShapesIcon } from "lucide-react";
+import { Link } from "react-router-dom";
 
 export function GlobalLayout({ children }) {
     return (
@@ -21,6 +13,17 @@ export function GlobalLayout({ children }) {
 }
 
 function Header() {
+    const routes = [
+        { path: "/", label: "Dashboards" },
+        { path: "/models", label: "Models" },
+        { path: "/etl", label: "ETL" },
+        { path: "/workflows", label: "Workflows" },
+        { path: "/database", label: "Database" },
+        { path: "/monitors", label: "Monitors" },
+        { path: "/logs", label: "Logs" },
+        { path: "/settings", label: "Settings" },
+    ];
+
     return (
         <header className="bg-white flex flex-col py-3">
             <div className="flex justify-between items-center mb-2">
@@ -42,16 +45,15 @@ function Header() {
                 </div>
             </div>
             <TabNav.Root>
-                <TabNav.Link href="#a" active>
-                    Dashboards
-                </TabNav.Link>
-                <TabNav.Link href="/models">Models</TabNav.Link>
-                <TabNav.Link href="#">ETL</TabNav.Link>
-                <TabNav.Link href="#">Workflows</TabNav.Link>
-                <TabNav.Link href="#">Database</TabNav.Link>
-                <TabNav.Link href="#">Monitors</TabNav.Link>
-                <TabNav.Link href="#">Logs</TabNav.Link>
-                <TabNav.Link href="#">Settings</TabNav.Link>
+                {routes.map((route) => (
+                    <TabNav.Link
+                        key={route.path}
+                        asChild
+                        active={window.location.pathname === route.path}
+                    >
+                        <Link to={route.path}>{route.label}</Link>
+                    </TabNav.Link>
+                ))}
             </TabNav.Root>
         </header>
     );
