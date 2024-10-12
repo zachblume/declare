@@ -29,6 +29,8 @@ services:
         build:
             context: ../
             dockerfile: __declare__/Dockerfile-studio
+        environment:
+            - DUMMY_JWT=${DUMMY_JWT}
         healthcheck:
             test: ["CMD", "curl", "-f", "http://localhost:5173/"]
             interval: 1s

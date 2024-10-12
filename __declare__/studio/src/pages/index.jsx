@@ -1,37 +1,21 @@
 import { DataGrid } from "components/DataGrid";
+import useSWR from "swr";
 
-export default function IndexPage() {
-    const dashboards = [
-        { name: "Sales Dashboard", description: "Overview of sales metrics" },
-        {
-            name: "Marketing Dashboard",
-            description: "Marketing campaign performance",
+const fetcher = (url, jwtToken) =>
+    fetch(url, {
+        headers: {
+            Authorization: `Bearer ${jwtToken}`,
         },
-        {
-            name: "Finance Dashboard",
-            description: "Financial health and metrics",
-        },
-        {
-            name: "Product Dashboard",
-            description: "Product performance and metrics",
-        },
-        {
-            name: "Customer Dashboard",
-            description: "Customer engagement and metrics",
-        },
-        {
-            name: "Operations Dashboard",
-            description: "Operational metrics and performance",
-        },
-        {
-            name: "Engineering Dashboard",
-            description: "Engineering metrics and performance",
-        },
-        {
-            name: "HR Dashboard",
-            description: "Human resources metrics and performance",
-        },
-    ];
+    }).then((res) => res.json());
+
+export default function IndexPage({ jwtToken }) {
+    const { data: dashboards, error } = useSWR(
+        ["/api/list-dashboards", jwtToken],
+        fetcher
+    );
+
+    if (error) return <div>Failed to load dashboards</div>;
+    if (!dashboards) return <div>Loading...</div>;
 
     return (
         <DataGrid
