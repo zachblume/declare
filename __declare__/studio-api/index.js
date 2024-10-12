@@ -32,6 +32,17 @@ loadRoutes(routesPath);
 const server = serve({
     port,
     fetch(req) {
+        // Enable CORS for all routes
+        const corsHeaders = {
+            "Access-Control-Allow-Origin": "*",
+            "Access-Control-Allow-Methods": "GET, POST, OPTIONS",
+            "Access-Control-Allow-Headers": "Content-Type",
+        };
+
+        if (req.method === "OPTIONS") {
+            return new Response(null, { headers: corsHeaders });
+        }
+
         const url = new URL(req.url);
         let pathname = url.pathname.replace(/^\/+|\/+$/g, "");
         let route = routes.find((r) => r.path === pathname);
@@ -40,10 +51,29 @@ const server = serve({
         }
         if (route) {
             console.debug(`Executing route handler for ${pathname}`);
-            return route.handler(req);
+            const response = route.handler(req);
+            if (response instanceof Response) {
+                response.headers.append("Access-Control-Allow-Origin", "*");
+                response.headers.append(
+                    "Access-Control-Allow-Methods",
+                    "GET, POST, OPTIONS"
+                );
+                response.headers.append(
+                    "Access-Control-Allow-Headers",
+                    "Content-Type"
+                );
+                return response;
+            }
+            return new Response(response.body, {
+                ...response,
+                headers: {
+                    ...response.headers,
+                    ...corsHeaders,
+                },
+            });
         }
         console.log(`Not found: ${pathname}`, routes);
-        return new Response("Not Found", { status: 404 });
+        return new Response("Not Found", { status: 404, headers: corsHeaders });
     },
 });
 

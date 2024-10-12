@@ -10,7 +10,7 @@ const fetcher = (url, jwtToken) =>
 
 export default function IndexPage({ jwtToken }) {
     const { data: dashboards, error } = useSWR(
-        ["/api/list-dashboards", jwtToken],
+        ["http://localhost:8000/api/list-dashboards", jwtToken],
         fetcher
     );
 

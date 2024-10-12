@@ -56,7 +56,7 @@ plugins:
       config:
           key_claim_name: "iss"
           secret_is_base64: false
-          run_on_preflight: true
+          run_on_preflight: false
 
 consumers:
     - username: example-consumer

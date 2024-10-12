@@ -1,4 +1,3 @@
-# Serve /api/**/** to `select * from **.**` against clickhouse
 FROM oven/bun:1 AS base
 WORKDIR /usr/src/app
 COPY ../__declare__/serve-models-api .
