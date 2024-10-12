@@ -50,7 +50,6 @@ const server = serve({
             route = routes.find((r) => r.path === pathname + "/index");
         }
         if (route) {
-            console.debug(`Executing route handler for ${pathname}`);
             const response = await route.handler(req);
             if (response instanceof Response) {
                 response.headers.append("Access-Control-Allow-Origin", "*");
