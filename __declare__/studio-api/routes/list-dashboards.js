@@ -18,11 +18,11 @@ export default async function handler() {
         dashboards = files
             .filter((file) => file.endsWith(".jsx"))
             .map((file) => ({ name: file, path: join(directoryPath, file) }));
+
+        return new Response(JSON.stringify(dashboards), { status: 200 });
     } catch (error) {
         return new Response(JSON.stringify({ error: error.message }), {
             status: 500,
         });
     }
-
-    return new Response(JSON.stringify(dashboards), { status: 200 });
 }

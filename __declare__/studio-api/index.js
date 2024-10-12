@@ -31,7 +31,7 @@ loadRoutes(routesPath);
 
 const server = serve({
     port,
-    fetch(req) {
+    async fetch(req) {
         // Enable CORS for all routes
         const corsHeaders = {
             "Access-Control-Allow-Origin": "*",
@@ -51,7 +51,7 @@ const server = serve({
         }
         if (route) {
             console.debug(`Executing route handler for ${pathname}`);
-            const response = route.handler(req);
+            const response = await route.handler(req);
             if (response instanceof Response) {
                 response.headers.append("Access-Control-Allow-Origin", "*");
                 response.headers.append(
