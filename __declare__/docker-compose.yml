@@ -58,7 +58,7 @@ services:
             context: ../
             dockerfile: __declare__/Dockerfile-studio-api
         healthcheck:
-            test: ["CMD", "curl", "-f", "http://localhost:8000/"]
+            test: ["CMD", "curl", "-f", "http://localhost:9998/"]
             interval: 1s
             timeout: 10s
             retries: 5
