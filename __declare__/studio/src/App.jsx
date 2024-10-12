@@ -4,7 +4,6 @@ import { Suspense } from "react";
 import { GlobalLayout } from "./components/GlobalLayout";
 
 export function App({ jwtToken }) {
-
     return (
         <GlobalLayout>
             <Suspense fallback={<p>Loading...</p>}>
