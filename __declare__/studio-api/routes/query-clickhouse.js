@@ -2,7 +2,7 @@ export default async function handler(req) {
     const { query } = await req.json();
 
     try {
-        const response = await fetch('http://clickhouse-server:8123', {
+        const response = await fetch('http://clickhouse:8123', {
             method: 'POST',
             headers: {
                 'Content-Type': 'text/plain',
