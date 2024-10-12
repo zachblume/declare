@@ -5,6 +5,6 @@ COPY ../__declare__/serve-models-api .
 RUN bun install
 
 ENV NODE_ENV=production
-EXPOSE 8001
+EXPOSE 9002
 
 CMD ["bun", "--watch", "index.js"]

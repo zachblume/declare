@@ -101,12 +101,12 @@ services:
             context: ../
             dockerfile: __declare__/Dockerfile-serve-models-api
         ports:
-            - "8001:8001"
+            - "9002:9002"
         depends_on:
             clickhouse:
                 condition: service_healthy
         healthcheck:
-            test: ["CMD", "curl", "-f", "http://localhost:8001/"]
+            test: ["CMD", "curl", "-f", "http://localhost:9002/"]
             interval: 1s
             timeout: 10s
             retries: 5
