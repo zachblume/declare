@@ -169,13 +169,10 @@ services:
             # The native protocol
             - "127.0.0.1:9000:9000"
         healthcheck:
-            test:
-                [
-                    "CMD-SHELL",
-                    "wget --no-verbose --tries=1 --spider http://localhost:8123/ping || exit 1",
-                ]
-            interval: 1s
+            test: ["CMD", "wget", "--spider", "-q", "localhost:8123/ping"]
+            interval: 30s
             timeout: 5s
+            retries: 3
         restart: always
         security_opt:
             - seccomp:unconfined

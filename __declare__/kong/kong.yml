@@ -3,7 +3,7 @@ _transform: true
 
 services:
     - name: studio-api
-      url: http://localhost:9998
+      url: http://studio-api:9998
       routes:
           - name: studio-api-route
             strip_path: true
@@ -13,7 +13,7 @@ services:
           - name: cors
 
     - name: dashboards
-      url: http://localhost:5173
+      url: http://dashboards:5173
       routes:
           - name: dashboards-route
             strip_path: true
@@ -23,7 +23,7 @@ services:
           - name: cors
 
     - name: serve-models-api
-      url: http://localhost:9002
+      url: http://serve-models-api:9002
       routes:
           - name: serve-models-api-route
             strip_path: true
@@ -33,7 +33,7 @@ services:
           - name: cors
 
     - name: workflow-worker
-      url: http://localhost:7077
+      url: http://workflow-worker:7077
       routes:
           - name: workflow-worker-route
             strip_path: true
@@ -43,7 +43,7 @@ services:
           - name: cors
 
     - name: clickhouse
-      url: http://localhost:8123
+      url: http://clickhouse:8123
       routes:
           - name: clickhouse-route
             strip_path: true
@@ -53,7 +53,7 @@ services:
           - name: cors
 
     - name: hatchet-postgres
-      url: http://localhost:5432
+      url: http://hatchet-postgres:5432
       routes:
           - name: hatchet-postgres-route
             strip_path: true
@@ -63,7 +63,7 @@ services:
           - name: cors
 
     - name: hatchet-lite
-      url: http://localhost:8888
+      url: http://hatchet-lite:8888
       routes:
           - name: hatchet-lite-route
             strip_path: true
@@ -73,6 +73,6 @@ services:
           - name: cors
 
 consumers:
-    - username: anon
+    - username: example-consumer
       keyauth_credentials:
-          - key: examplekey
+          - key: example-key
