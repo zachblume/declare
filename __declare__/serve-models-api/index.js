@@ -1,7 +1,7 @@
 import { createClient } from "@clickhouse/client";
 import bun from "bun";
 
-const port = process.env.PORT ?? 8001;
+const port = process.env.PORT ?? 9002;
 
 const db = createClient({
     url: process.env.CLICKHOUSE_HOST ?? "http://clickhouse:8123",
