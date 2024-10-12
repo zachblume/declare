@@ -8,11 +8,13 @@ import "@radix-ui/themes/styles.css";
 
 const app = createRoot(document.getElementById("root"));
 
+const jwtToken = process.env.DUMMY_JWT;
+
 app.render(
     <StrictMode>
         <BrowserRouter>
             <Theme accentColor="green" grayColor="olive">
-                <App />
+                <App jwtToken={jwtToken} />
             </Theme>
         </BrowserRouter>
     </StrictMode>
