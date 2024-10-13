@@ -196,9 +196,9 @@ services:
             - "127.0.0.1:9000:9000"
         healthcheck:
             test: ["CMD", "wget", "--spider", "-q", "localhost:8123/ping"]
-            interval: 30s
+            interval: 2s
             timeout: 5s
-            retries: 3
+            retries: 10
         restart: always
         security_opt:
             - seccomp:unconfined
@@ -215,7 +215,7 @@ services:
         #     - postgres-db-volume:/var/lib/postgresql/data
         healthcheck:
             test: ["CMD", "pg_isready", "-U", "airflow"]
-            interval: 10s
+            interval: 1s
             retries: 5
             start_period: 5s
         restart: always
@@ -228,16 +228,16 @@ services:
         restart: always
         healthcheck:
             test: ["CMD", "curl", "--fail", "http://localhost:8080/health"]
-            interval: 15s
-            timeout: 10s
-            retries: 5
+            interval: 1s
+            timeout: 2s
+            retries: 50
         image: ${AIRFLOW_IMAGE_NAME:-apache/airflow:latest}
         environment:
             AIRFLOW__CORE__EXECUTOR: LocalExecutor
             AIRFLOW__DATABASE__SQL_ALCHEMY_CONN: postgresql+psycopg2://airflow:airflow@declare-workflow-db/airflow
             AIRFLOW__CORE__FERNET_KEY: ""
             AIRFLOW__CORE__DAGS_ARE_PAUSED_AT_CREATION: "true"
-            AIRFLOW__CORE__LOAD_EXAMPLES: "true"
+            AIRFLOW__CORE__LOAD_EXAMPLES: "false"
             AIRFLOW__API__AUTH_BACKENDS: "airflow.api.auth.backend.basic_auth,airflow.api.auth.backend.session"
             # yamllint disable rule:line-length
             # Use simple http server on scheduler for health checks
