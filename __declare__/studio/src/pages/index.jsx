@@ -1,19 +1,8 @@
 import { DataGrid } from "components/DataGrid";
-import useSWR from "swr";
+import useApi from "lib/useApi";
 
-const fetcher = ([url, jwtToken]) =>
-    fetch(url, {
-        headers: {
-            // Authorization: `Bearer ${"jwtToken"}`,
-            apikey: "ANON_KEY",
-        },
-    }).then((res) => res.json());
-
-export default function IndexPage({ jwtToken }) {
-    const { data: dashboards, error } = useSWR(
-        ["http://localhost:8000/api/list-dashboards", jwtToken],
-        fetcher
-    );
+export default function IndexPage() {
+    const { data: dashboards } = useApi("/list-dashboards");
 
     return (
         <DataGrid

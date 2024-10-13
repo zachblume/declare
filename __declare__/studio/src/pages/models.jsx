@@ -1,19 +1,8 @@
 import { DataGrid } from "components/DataGrid";
-import useSWR from "swr";
+import useApi from "lib/useApi";
 
-const fetcher = ([url, jwtToken]) =>
-    fetch(url, {
-        headers: {
-            // Authorization: `Bearer ${"jwtToken"}`,
-            apikey: "ANON_KEY",
-        },
-    }).then((res) => res.json());
-
-export default function ModelsPage({ jwtToken }) {
-    const { data: models, error } = useSWR(
-        ["http://localhost:8000/api/list-models", jwtToken],
-        fetcher
-    );
+export default function ModelsPage() {
+    const { data: models } = useApi("/list-models");
 
     return (
         <DataGrid
