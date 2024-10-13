@@ -153,19 +153,6 @@ services:
                 done
             "
         restart: always
-    workflow-worker:
-        container_name: workflow-worker
-        build:
-            context: ../
-            dockerfile: __declare__/Dockerfile-workflow-worker
-        depends_on:
-            hatchet-lite:
-                condition: service_healthy
-        # Use host networking to allow access to localhost:7077
-        network_mode: "host"
-        volumes:
-            - ./../workflows:/usr/src/app/workflows
-        restart: unless-stopped
     clickhouse:
         container_name: clickhouse
         image: clickhouse/clickhouse-server
@@ -186,7 +173,7 @@ services:
             - seccomp:unconfined
     airflow-webserver:
         container_name: airflow-webserver
-        image: apache/airflow:2.2.3
+        image: apache/airflow:latest
         environment:
             - AIRFLOW__CORE__EXECUTOR=LocalExecutor
             - AIRFLOW__CORE__SQL_ALCHEMY_CONN=postgresql+psycopg2://airflow:airflow@airflow-db:5432/airflow
@@ -206,7 +193,7 @@ services:
         restart: unless-stopped
     airflow-scheduler:
         container_name: airflow-scheduler
-        image: apache/airflow:2.2.3
+        image: apache/airflow:latest
         environment:
             - AIRFLOW__CORE__EXECUTOR=LocalExecutor
             - AIRFLOW__CORE__SQL_ALCHEMY_CONN=postgresql+psycopg2://airflow:airflow@airflow-db:5432/airflow
@@ -224,7 +211,7 @@ services:
         restart: unless-stopped
     airflow-worker:
         container_name: airflow-worker
-        image: apache/airflow:2.2.3
+        image: apache/airflow:latest
         environment:
             - AIRFLOW__CORE__EXECUTOR=LocalExecutor
             - AIRFLOW__CORE__SQL_ALCHEMY_CONN=postgresql+psycopg2://airflow:airflow@airflow-db:5432/airflow
@@ -273,7 +260,7 @@ services:
         restart: unless-stopped
     airflow-flower:
         container_name: airflow-flower
-        image: apache/airflow:2.2.3
+        image: apache/airflow:latest
         environment:
             - AIRFLOW__CORE__EXECUTOR=LocalExecutor
             - AIRFLOW__CORE__SQL_ALCHEMY_CONN=postgresql+psycopg2://airflow:airflow@airflow-db:5432/airflow
