@@ -15,13 +15,13 @@ attachlogs:
 	docker-compose -f __declare__/docker-compose.yml logs --follow
 
 stop:
-	docker-compose -f __declare__/docker-compose.yml stop
+	docker-compose -f __declare__/docker-compose.yml down
 
 restart:
 	docker-compose -f __declare__/docker-compose.yml restart
 
 clean:
-	docker-compose -f __declare__/docker-compose.yml down
+	docker-compose -f __declare__/docker-compose.yml down --volumes --remove-orphans
 	docker-compose -f __declare__/docker-compose.yml rm -f
 
 dev: clean dev-up

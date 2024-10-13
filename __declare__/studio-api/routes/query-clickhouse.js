@@ -2,16 +2,19 @@ export default async function handler(req) {
     const { query } = await req.json();
 
     try {
-        const response = await fetch('http://clickhouse:8123', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'text/plain',
-            },
-            body: query,
-        });
+        const response = await fetch(
+            "http://declare-warehouse-clickhouse:8123",
+            {
+                method: "POST",
+                headers: {
+                    "Content-Type": "text/plain",
+                },
+                body: query,
+            }
+        );
 
         if (!response.ok) {
-            throw new Error('Failed to execute query');
+            throw new Error("Failed to execute query");
         }
 
         const data = await response.text();
