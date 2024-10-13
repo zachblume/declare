@@ -289,6 +289,5 @@ services:
             declare-workflow-db:
                 condition: service_healthy
         restart: "no"
-
-volumes:
-    postgres-db-volume:
+# volumes:
+#     postgres-db-volume:
