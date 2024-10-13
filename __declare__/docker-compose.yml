@@ -184,62 +184,114 @@ services:
         restart: always
         security_opt:
             - seccomp:unconfined
-    hatchet-postgres:
-        container_name: hatchet-postgres
-        image: postgres:15.6
-        command: postgres -c 'max_connections=200'
-        restart: always
+    airflow-webserver:
+        container_name: airflow-webserver
+        image: apache/airflow:2.2.3
         environment:
-            - POSTGRES_USER=hatchet
-            - POSTGRES_PASSWORD=hatchet
-            - POSTGRES_DB=hatchet
+            - AIRFLOW__CORE__EXECUTOR=LocalExecutor
+            - AIRFLOW__CORE__SQL_ALCHEMY_CONN=postgresql+psycopg2://airflow:airflow@airflow-db:5432/airflow
+            - AIRFLOW__CORE__FERNET_KEY=YOUR_FERNET_KEY
+            - AIRFLOW__CORE__LOAD_EXAMPLES=False
+        ports:
+            - "8080:8080"
         volumes:
-            - hatchet_lite_postgres_data:/var/lib/postgresql/data
+            - ./dags:/opt/airflow/dags
+            - ./logs:/opt/airflow/logs
+            - ./plugins:/opt/airflow/plugins
         healthcheck:
-            test: ["CMD-SHELL", "pg_isready -U hatchet -d hatchet"]
+            test: ["CMD", "curl", "-f", "http://localhost:8080/health"]
+            interval: 10s
+            timeout: 10s
+            retries: 5
+        restart: unless-stopped
+    airflow-scheduler:
+        container_name: airflow-scheduler
+        image: apache/airflow:2.2.3
+        environment:
+            - AIRFLOW__CORE__EXECUTOR=LocalExecutor
+            - AIRFLOW__CORE__SQL_ALCHEMY_CONN=postgresql+psycopg2://airflow:airflow@airflow-db:5432/airflow
+            - AIRFLOW__CORE__FERNET_KEY=YOUR_FERNET_KEY
+            - AIRFLOW__CORE__LOAD_EXAMPLES=False
+        volumes:
+            - ./dags:/opt/airflow/dags
+            - ./logs:/opt/airflow/logs
+            - ./plugins:/opt/airflow/plugins
+        healthcheck:
+            test: ["CMD", "curl", "-f", "http://localhost:8080/health"]
+            interval: 10s
+            timeout: 10s
+            retries: 5
+        restart: unless-stopped
+    airflow-worker:
+        container_name: airflow-worker
+        image: apache/airflow:2.2.3
+        environment:
+            - AIRFLOW__CORE__EXECUTOR=LocalExecutor
+            - AIRFLOW__CORE__SQL_ALCHEMY_CONN=postgresql+psycopg2://airflow:airflow@airflow-db:5432/airflow
+            - AIRFLOW__CORE__FERNET_KEY=YOUR_FERNET_KEY
+            - AIRFLOW__CORE__LOAD_EXAMPLES=False
+        volumes:
+            - ./dags:/opt/airflow/dags
+            - ./logs:/opt/airflow/logs
+            - ./plugins:/opt/airflow/plugins
+        healthcheck:
+            test: ["CMD", "curl", "-f", "http://localhost:8080/health"]
+            interval: 10s
+            timeout: 10s
+            retries: 5
+        restart: unless-stopped
+    airflow-db:
+        container_name: airflow-db
+        image: postgres:13
+        environment:
+            - POSTGRES_USER=airflow
+            - POSTGRES_PASSWORD=airflow
+            - POSTGRES_DB=airflow
+        ports:
+            - "5432:5432"
+        volumes:
+            - airflow_db_data:/var/lib/postgresql/data
+        healthcheck:
+            test: ["CMD-SHELL", "pg_isready -U airflow -d airflow"]
             interval: 1s
             timeout: 10s
             retries: 20
             start_period: 1s
-    hatchet-lite:
-        container_name: hatchet-lite
-        image: ghcr.io/hatchet-dev/hatchet/hatchet-lite:latest
+        restart: unless-stopped
+    redis:
+        container_name: redis
+        image: redis:6.2
         ports:
-            - "8888:8888"
-            - "7077:7077"
-        depends_on:
-            hatchet-postgres:
-                condition: service_healthy
+            - "6379:6379"
+        volumes:
+            - redis_data:/data
         healthcheck:
-            test: ["CMD", "curl", "-f", "http://localhost:8888/"]
+            test: ["CMD", "redis-cli", "ping"]
             interval: 10s
             timeout: 10s
             retries: 5
+        restart: unless-stopped
+    airflow-flower:
+        container_name: airflow-flower
+        image: apache/airflow:2.2.3
         environment:
-            RABBITMQ_DEFAULT_USER: "user"
-            RABBITMQ_DEFAULT_PASS: "password"
-            DATABASE_URL: "postgresql://hatchet:hatchet@hatchet-postgres:5432/hatchet?sslmode=disable"
-            DATABASE_POSTGRES_PORT: "5432"
-            DATABASE_POSTGRES_HOST: "hatchet-postgres"
-            SERVER_TASKQUEUE_RABBITMQ_URL: amqp://user:password@localhost:5672/
-            SERVER_AUTH_COOKIE_DOMAIN: localhost
-            SERVER_AUTH_COOKIE_INSECURE: "t"
-            SERVER_GRPC_BIND_ADDRESS: "0.0.0.0"
-            SERVER_GRPC_INSECURE: "t"
-            SERVER_GRPC_BROADCAST_ADDRESS: localhost:7077
-            SERVER_GRPC_PORT: "7077"
-            SERVER_URL: http://localhost:8888
-            SERVER_AUTH_SET_EMAIL_VERIFIED: "t"
-            SERVER_LOGGER_LEVEL: warn
-            SERVER_LOGGER_FORMAT: console
-            DATABASE_LOGGER_LEVEL: warn
-            DATABASE_LOGGER_FORMAT: console
+            - AIRFLOW__CORE__EXECUTOR=LocalExecutor
+            - AIRFLOW__CORE__SQL_ALCHEMY_CONN=postgresql+psycopg2://airflow:airflow@airflow-db:5432/airflow
+            - AIRFLOW__CORE__FERNET_KEY=YOUR_FERNET_KEY
+            - AIRFLOW__CORE__LOAD_EXAMPLES=False
+        ports:
+            - "5555:5555"
         volumes:
-            - "hatchet_lite_rabbitmq_data:/var/lib/rabbitmq/mnesia"
-            - "hatchet_lite_config:/config"
-        attach: false
+            - ./dags:/opt/airflow/dags
+            - ./logs:/opt/airflow/logs
+            - ./plugins:/opt/airflow/plugins
+        healthcheck:
+            test: ["CMD", "curl", "-f", "http://localhost:5555/health"]
+            interval: 10s
+            timeout: 10s
+            retries: 5
+        restart: unless-stopped
 
 volumes:
-    hatchet_lite_postgres_data:
-    hatchet_lite_rabbitmq_data:
-    hatchet_lite_config:
+    airflow_db_data:
+    redis_data:

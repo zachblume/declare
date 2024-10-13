@@ -5,7 +5,7 @@ description = "Open-source framework for doing data engineering & analytics deve
 readme = "README.md"
 requires-python = ">=3.12"
 dependencies = [
-    "hatchet-sdk>=0.38.1",
+    "apache-airflow>=2.10.2",
     "python-dotenv>=1.0.1",
     "watchdog>=5.0.3",
 ]
