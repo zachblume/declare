@@ -67,7 +67,11 @@ services:
         volumes:
             - ./kong/kong.yml:/usr/local/kong/declarative/kong.yml
         healthcheck:
-            test: ["CMD", "curl", "-f", "http://localhost:8001/status"]
+            test:
+                [
+                    "CMD-SHELL",
+                    "if echo > /dev/tcp/localhost/8001; then exit 0; else exit 1; fi",
+                ]
             interval: 10s
             timeout: 10s
             retries: 5
@@ -176,7 +180,7 @@ services:
                     "CMD",
                     "bun",
                     "-e",
-                    "require('http').get('http://localhost:90002', (r) => {if (r.statusCode !== 200) throw new Error(r.statusCode)})",
+                    "require('http').get('http://localhost:9002', (r) => {if (r.statusCode !== 200) throw new Error(r.statusCode)})",
                 ]
             interval: 1s
             timeout: 10s
