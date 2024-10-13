@@ -80,7 +80,13 @@ services:
         environment:
             - DUMMY_JWT=${DUMMY_JWT}
         healthcheck:
-            test: ["CMD", "curl", "-f", "http://localhost:3000/"]
+            test:
+                [
+                    "CMD",
+                    "bun",
+                    "-e",
+                    "require('http').get('http://localhost:3000', (r) => {if (r.statusCode !== 200) throw new Error(r.statusCode)})",
+                ]
             interval: 1s
             timeout: 10s
             retries: 5
@@ -103,7 +109,13 @@ services:
             context: ../
             dockerfile: __declare__/Dockerfile-studio-api
         healthcheck:
-            test: ["CMD", "curl", "-f", "http://localhost:9998/"]
+            test:
+                [
+                    "CMD",
+                    "bun",
+                    "-e",
+                    "require('http').get('http://localhost:9998', (r) => {if (r.statusCode !== 200) throw new Error(r.statusCode)})",
+                ]
             interval: 1s
             timeout: 10s
             retries: 5
@@ -159,7 +171,13 @@ services:
             declare-warehouse-clickhouse:
                 condition: service_healthy
         healthcheck:
-            test: ["CMD", "curl", "-f", "http://localhost:9002/"]
+            test:
+                [
+                    "CMD",
+                    "bun",
+                    "-e",
+                    "require('http').get('http://localhost:90002', (r) => {if (r.statusCode !== 200) throw new Error(r.statusCode)})",
+                ]
             interval: 1s
             timeout: 10s
             retries: 5
