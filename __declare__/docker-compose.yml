@@ -190,6 +190,9 @@ services:
         volumes:
             - ./../workflows:/usr/src/app/workflows
         restart: unless-stopped
+        environment:
+            - HATCHET_CLIENT_TOKEN=${HATCHET_CLIENT_TOKEN}
+            - HATCHET_CLIENT_TLS_STRATEGY=${HATCHET_CLIENT_TLS_STRATEGY}
     clickhouse:
         container_name: clickhouse
         image: clickhouse/clickhouse-server
@@ -222,7 +225,7 @@ services:
         healthcheck:
             test: ["CMD-SHELL", "pg_isready -U hatchet -d hatchet"]
             interval: 1s
-            timeout: 10s
+            timeout: 1s
             retries: 20
             start_period: 1s
     hatchet-lite:
@@ -278,7 +281,7 @@ services:
             dashboards:
                 condition: service_healthy
             hot-model-reloader:
-                condition: service_healthy
+                condition: service_started
             serve-models-api:
                 condition: service_healthy
             sql-linter:

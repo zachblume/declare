@@ -3,6 +3,7 @@ WORKDIR /usr/src/app
 COPY ../__declare__ ./__declare__
 COPY ../pyproject.toml .
 COPY ../uv.lock .
+COPY ../.env .
 RUN pip install uv
 RUN uv sync --frozen
 EXPOSE 9999
