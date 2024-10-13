@@ -1,0 +1,15 @@
+name: declare
+version: 1.0.0
+profile: declare_profile
+
+source-paths:
+  - models
+
+target-path: target
+clean-targets:
+  - target
+  - dbt_modules
+
+models:
+  declare:
+    +materialized: view
