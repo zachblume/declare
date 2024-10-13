@@ -262,6 +262,34 @@ services:
             - "hatchet_lite_rabbitmq_data:/var/lib/rabbitmq/mnesia"
             - "hatchet_lite_config:/config"
         attach: false
+    declare-ready-notifier:
+        container_name: declare-ready-notifier
+        # This service prints a message to the console when every container is ready
+        image: busybox:latest
+        entrypoint: /bin/sh
+        command: -c "echo 'All containers are ready!'"
+        depends_on:
+            kong:
+                condition: service_healthy
+            studio:
+                condition: service_healthy
+            studio-api:
+                condition: service_healthy
+            dashboards:
+                condition: service_healthy
+            hot-model-reloader:
+                condition: service_healthy
+            serve-models-api:
+                condition: service_healthy
+            sql-linter:
+                condition: service_healthy
+            workflow-worker:
+                condition: service_healthy
+            clickhouse:
+                condition: service_healthy
+            hatchet-lite:
+                condition: service_healthy
+        restart: "no"
 
 volumes:
     hatchet_lite_postgres_data:
