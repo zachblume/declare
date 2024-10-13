@@ -282,9 +282,9 @@ services:
             serve-models-api:
                 condition: service_healthy
             sql-linter:
-                condition: service_healthy
+                condition: service_started
             workflow-worker:
-                condition: service_healthy
+                condition: service_started
             clickhouse:
                 condition: service_healthy
             hatchet-lite:
