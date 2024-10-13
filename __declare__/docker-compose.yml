@@ -181,10 +181,10 @@ services:
             - AIRFLOW__CORE__LOAD_EXAMPLES=False
         ports:
             - "8080:8080"
-        volumes:
-            - ./dags:/opt/airflow/dags
-            - ./logs:/opt/airflow/logs
-            - ./plugins:/opt/airflow/plugins
+        # volumes:
+        #     - ./dags:/opt/airflow/dags
+        #     - ./logs:/opt/airflow/logs
+        #     - ./plugins:/opt/airflow/plugins
         healthcheck:
             test: ["CMD", "curl", "-f", "http://localhost:8080/health"]
             interval: 10s
@@ -199,10 +199,10 @@ services:
             - AIRFLOW__CORE__SQL_ALCHEMY_CONN=postgresql+psycopg2://airflow:airflow@airflow-db:5432/airflow
             - AIRFLOW__CORE__FERNET_KEY=YOUR_FERNET_KEY
             - AIRFLOW__CORE__LOAD_EXAMPLES=False
-        volumes:
-            - ./dags:/opt/airflow/dags
-            - ./logs:/opt/airflow/logs
-            - ./plugins:/opt/airflow/plugins
+        # volumes:
+        #     - ./dags:/opt/airflow/dags
+        #     - ./logs:/opt/airflow/logs
+        #     - ./plugins:/opt/airflow/plugins
         healthcheck:
             test: ["CMD", "curl", "-f", "http://localhost:8080/health"]
             interval: 10s
@@ -217,10 +217,10 @@ services:
             - AIRFLOW__CORE__SQL_ALCHEMY_CONN=postgresql+psycopg2://airflow:airflow@airflow-db:5432/airflow
             - AIRFLOW__CORE__FERNET_KEY=YOUR_FERNET_KEY
             - AIRFLOW__CORE__LOAD_EXAMPLES=False
-        volumes:
-            - ./dags:/opt/airflow/dags
-            - ./logs:/opt/airflow/logs
-            - ./plugins:/opt/airflow/plugins
+        # volumes:
+        #     - ./dags:/opt/airflow/dags
+        #     - ./logs:/opt/airflow/logs
+        #     - ./plugins:/opt/airflow/plugins
         healthcheck:
             test: ["CMD", "curl", "-f", "http://localhost:8080/health"]
             interval: 10s
@@ -236,8 +236,8 @@ services:
             - POSTGRES_DB=airflow
         ports:
             - "5432:5432"
-        volumes:
-            - airflow_db_data:/var/lib/postgresql/data
+        # volumes:
+        #     - airflow_db_data:/var/lib/postgresql/data
         healthcheck:
             test: ["CMD-SHELL", "pg_isready -U airflow -d airflow"]
             interval: 1s
@@ -250,8 +250,8 @@ services:
         image: redis:6.2
         ports:
             - "6379:6379"
-        volumes:
-            - redis_data:/data
+        # volumes:
+        #     - redis_data:/data
         healthcheck:
             test: ["CMD", "redis-cli", "ping"]
             interval: 10s
@@ -268,10 +268,10 @@ services:
             - AIRFLOW__CORE__LOAD_EXAMPLES=False
         ports:
             - "5555:5555"
-        volumes:
-            - ./dags:/opt/airflow/dags
-            - ./logs:/opt/airflow/logs
-            - ./plugins:/opt/airflow/plugins
+        # volumes:
+        #     - ./dags:/opt/airflow/dags
+        #     - ./logs:/opt/airflow/logs
+        #     - ./plugins:/opt/airflow/plugins
         healthcheck:
             test: ["CMD", "curl", "-f", "http://localhost:5555/health"]
             interval: 10s
