@@ -1,17 +1,20 @@
-from __declare__.workflows.client import Workflows
+from airflow.decorators import dag, task
+from datetime import datetime
 
-@Workflows.workflow(on_events=["tutorial:create"], name="first-workflow")
-class ExampleWorkflow:
-
-    @Workflows.step(name="first_step")
-    def first_step(self, ctx):
+@dag(schedule_interval=None, start_date=datetime(2023, 1, 1), catchup=False, tags=['example'])
+def example_workflow():
+    
+    @task
+    def first_step():
         print("Congratulations! You've successfully triggered your first Python workflow run! 🎉")
         return {"result": "success!"}
     
-    @Workflows.step(parents=["first_step"])
-    def second_step(self, ctx):
-        print("second step worked as well")
+    @task
+    def second_step(first_step_result):
+        print(f"second step worked as well with result: {first_step_result}")
         return {"result": "success2"}
-        
-# Test event:
-# Workflows.event.push("user:create", {"test": "test"})
+    
+    first_result = first_step()
+    second_step(first_result)
+
+example_workflow_dag = example_workflow()
