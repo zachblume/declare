@@ -5,4 +5,5 @@
 html,
 body {
     height: 100vh;
+    @apply p-2 px-4;
 }
