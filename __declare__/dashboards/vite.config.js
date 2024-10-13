@@ -6,7 +6,7 @@ import Pages from "vite-plugin-pages";
 export default defineConfig({
     plugins: [
         react(),
-        Pages({ dirs: "src/user_dashboards" }),
+        Pages({ dirs: "src/dashboards" }),
         {
             name: "custom-hmr",
             handleHotUpdate({ file, server }) {

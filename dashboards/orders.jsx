@@ -1,10 +1,14 @@
 import { useEffect, useState } from "react";
 import ReactECharts from "echarts-for-react";
 
+const BASE_URL_SERVE_MODELS_API = "http://localhost:9002";
+
 export default function OrdersDashboard() {
     const [data, setData] = useState(null);
     useEffect(() => {
-        fetch("http://localhost:8001/api/ecommerce/orders_moved_from_postgres")
+        fetch(
+            `${BASE_URL_SERVE_MODELS_API}/api/ecommerce/orders_moved_from_postgres`
+        )
             .then((res) => res.json())
             .then((response) => setData(response.data))
             .catch(console.error);
