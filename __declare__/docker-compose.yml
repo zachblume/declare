@@ -96,7 +96,7 @@ services:
             test:
                 [
                     "CMD",
-                    "bun",
+                    "node",
                     "-e",
                     "require('http').get('http://localhost:5173', (r) => {if (r.statusCode !== 200) throw new Error(r.statusCode)})",
                 ]
