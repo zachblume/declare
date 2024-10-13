@@ -1,6 +1,7 @@
 import { watch, readFile } from "fs/promises";
 const fs = require("fs");
 const { createClient } = require("@clickhouse/client");
+const { exec } = require('child_process');
 
 const db = createClient({
     url:
@@ -15,12 +16,17 @@ const debounceMap = new Map();
 
 // Watcher for file changes to models/**/**/definition.sql
 async function main() {
-    reloadAllModels();
-    const watcher = watch("./", { recursive: true });
-    for await (const event of watcher) {
-        if (event.filename.endsWith("definition.sql")) {
-            handleFileChange(event.filename);
+    try {
+        await runDbtCompile();
+        await reloadAllModels();
+        const watcher = watch("./", { recursive: true });
+        for await (const event of watcher) {
+            if (event.filename.endsWith("definition.sql")) {
+                handleFileChange(event.filename);
+            }
         }
+    } catch (error) {
+        console.error(`Error in main function: ${error.message}`);
     }
 }
 main();
@@ -105,4 +111,20 @@ async function triggerEventLogWrite() {
         console.error(`Error while writing log file`, err);
         throw err;
     }
+}
+
+function runDbtCompile() {
+    return new Promise((resolve, reject) => {
+        exec('dbt compile', (error, stdout, stderr) => {
+            if (error) {
+                console.error(`Error running dbt compile: ${error.message}`);
+                return reject(error);
+            }
+            if (stderr) {
+                console.error(`dbt compile stderr: ${stderr}`);
+            }
+            console.log(`dbt compile stdout: ${stdout}`);
+            resolve();
+        });
+    });
 }

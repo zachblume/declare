@@ -5,6 +5,13 @@ WORKDIR /usr/src/app
 COPY ../__declare__/hot-model-reloader .
 RUN bun install
 
+# Install DBT
+RUN pip install dbt
+
+# Copy the dbt_project.yml file to the working directory
+COPY ../models/dbt_project.yml /usr/src/app/models/dbt_project.yml
+
 ENV NODE_ENV=production
 
-CMD ["bun", "--watch", "index.js"]
+# Run dbt compile before starting the hot model reloader
+CMD ["sh", "-c", "dbt compile && bun --watch index.js"]
