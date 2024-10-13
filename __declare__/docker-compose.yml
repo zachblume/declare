@@ -67,12 +67,8 @@ services:
         volumes:
             - ./kong/kong.yml:/usr/local/kong/declarative/kong.yml
         healthcheck:
-            test:
-                [
-                    "CMD-SHELL",
-                    "if echo > /dev/tcp/localhost/8001; then exit 0; else exit 1; fi",
-                ]
-            interval: 10s
+            test: ["CMD", "kong", "health"]
+            interval: 1s
             timeout: 10s
             retries: 5
         restart: unless-stopped
