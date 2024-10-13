@@ -190,9 +190,6 @@ services:
         volumes:
             - ./../workflows:/usr/src/app/workflows
         restart: unless-stopped
-        environment:
-            - HATCHET_CLIENT_TOKEN=${HATCHET_CLIENT_TOKEN}
-            - HATCHET_CLIENT_TLS_STRATEGY=${HATCHET_CLIENT_TLS_STRATEGY}
     clickhouse:
         container_name: clickhouse
         image: clickhouse/clickhouse-server
