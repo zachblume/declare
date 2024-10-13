@@ -3,7 +3,9 @@ const fs = require("fs");
 const { createClient } = require("@clickhouse/client");
 
 const db = createClient({
-    url: process.env.CLICKHOUSE_HOST ?? "http://clickhouse:8123",
+    url:
+        process.env.CLICKHOUSE_HOST ??
+        "http://declare-warehouse-clickhouse:8123",
     username: process.env.CLICKHOUSE_USER ?? "default",
     password: process.env.CLICKHOUSE_PASSWORD ?? "",
 });
@@ -55,8 +57,8 @@ async function reloadAllModels() {
     // Do it in parallel
     await Promise.all(
         models.map((model) =>
-            reloadModel({ filename: model.fullPath, shouldLog: false }),
-        ),
+            reloadModel({ filename: model.fullPath, shouldLog: false })
+        )
     );
 
     triggerEventLogWrite();
@@ -83,7 +85,7 @@ async function reloadModel({ shouldLog = false, ...event }) {
     } catch (err) {
         console.error(
             `Error while loading model ${database}.${table}:`,
-            err.message,
+            err.message
         );
     }
 

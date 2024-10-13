@@ -4,7 +4,9 @@ import bun from "bun";
 const port = process.env.PORT ?? 9002;
 
 const db = createClient({
-    url: process.env.CLICKHOUSE_HOST ?? "http://clickhouse:8123",
+    url:
+        process.env.CLICKHOUSE_HOST ??
+        "http://declare-warehouse-clickhouse:8123",
     username: process.env.CLICKHOUSE_USER ?? "default",
     password: process.env.CLICKHOUSE_PASSWORD ?? "",
 });

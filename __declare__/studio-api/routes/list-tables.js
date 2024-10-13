@@ -1,17 +1,20 @@
 export default async function handler() {
     try {
-        const response = await fetch('http://clickhouse:8123', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({
-                query: 'SHOW TABLES',
-            }),
-        });
+        const response = await fetch(
+            "http://declare-warehouse-clickhouse:8123",
+            {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({
+                    query: "SHOW TABLES",
+                }),
+            }
+        );
 
         if (!response.ok) {
-            throw new Error('Failed to fetch tables');
+            throw new Error("Failed to fetch tables");
         }
 
         const data = await response.json();

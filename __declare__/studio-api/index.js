@@ -45,10 +45,12 @@ const server = serve({
 
         const url = new URL(req.url);
         let pathname = url.pathname.replace(/^\/+|\/+$/g, "");
+
         // Return 200 to /status
         if (pathname === "status") {
             return new Response("OK", { status: 200 });
         }
+
         let route = routes.find((r) => r.path === pathname);
         if (!route) {
             route = routes.find((r) => r.path === pathname + "/index");

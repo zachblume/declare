@@ -15,7 +15,7 @@ attachlogs:
 	docker-compose -f __declare__/docker-compose.yml logs --follow
 
 stop:
-	docker-compose -f __declare__/docker-compose.yml stop
+	docker-compose -f __declare__/docker-compose.yml down
 
 restart:
 	docker-compose -f __declare__/docker-compose.yml restart

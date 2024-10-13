@@ -1,8 +1,8 @@
 name: declare
 
 services:
-    kong:
-        container_name: kong
+    declare-gateway:
+        container_name: declare-gateway
         image: kong:latest
         environment:
             KONG_DATABASE: "off"
@@ -28,12 +28,13 @@ services:
             - ./kong/kong.yml:/usr/local/kong/declarative/kong.yml
         healthcheck:
             test: ["CMD", "kong", "health"]
-            interval: 10s
+            interval: 1s
             timeout: 10s
             retries: 5
         restart: unless-stopped
-    studio:
-        container_name: studio
+
+    declare-studio:
+        container_name: declare-studio
         build:
             context: ../
             dockerfile: __declare__/Dockerfile-studio
@@ -63,8 +64,9 @@ services:
                 bun install && \
                 bun run dev -- --host 0.0.0.0 --port 3000
             "
-    studio-api:
-        container_name: studio-api
+
+    declare-api:
+        container_name: declare-api
         build:
             context: ../
             dockerfile: __declare__/Dockerfile-studio-api
@@ -87,8 +89,9 @@ services:
             - ./../workflows:/usr/src/app/mount/workflows
             - ./../dashboards:/usr/src/app/mount/dashboards
         restart: unless-stopped
-    dashboards:
-        container_name: dashboards
+
+    declare-dashboards:
+        container_name: declare-dashboards
         build:
             context: ../
             dockerfile: __declare__/Dockerfile-dashboards
@@ -113,28 +116,30 @@ services:
             # watching as well
             - ./../models:/usr/src/app/src/models
         restart: unless-stopped
-    hot-model-reloader:
-        container_name: hot-model-reloader
+
+    declare-hot-model-reloader:
+        container_name: declare-hot-model-reloader
         build:
             context: ../
             dockerfile: __declare__/Dockerfile-hot-model-reloader
         depends_on:
-            clickhouse:
+            declare-warehouse-clickhouse:
                 condition: service_healthy
         volumes:
             # Mount the model definitions directory to the container for
             # watching
             - ./../models:/usr/src/app/models
         restart: unless-stopped
-    serve-models-api:
-        container_name: serve-models-api
+
+    declare-serve-models-api:
+        container_name: declare-serve-models-api
         build:
             context: ../
             dockerfile: __declare__/Dockerfile-serve-models-api
         ports:
             - "9002:9002"
         depends_on:
-            clickhouse:
+            declare-warehouse-clickhouse:
                 condition: service_healthy
         healthcheck:
             test:
@@ -148,8 +153,9 @@ services:
             timeout: 10s
             retries: 5
         restart: unless-stopped
-    sql-linter:
-        container_name: sql-linter
+
+    declare-sql-linter:
+        container_name: declare-sql-linter
         image: sqlfluff/sqlfluff:latest
         user: root # Run as root to gain necessary permissions
         volumes:
@@ -177,21 +183,9 @@ services:
                 done
             "
         restart: always
-    workflow-worker:
-        container_name: workflow-worker
-        build:
-            context: ../
-            dockerfile: __declare__/Dockerfile-workflow-worker
-        depends_on:
-            hatchet-lite:
-                condition: service_healthy
-        # Use host networking to allow access to localhost:7077
-        network_mode: "host"
-        volumes:
-            - ./../workflows:/usr/src/app/workflows
-        restart: unless-stopped
-    clickhouse:
-        container_name: clickhouse
+
+    declare-warehouse-clickhouse:
+        container_name: declare-warehouse-clickhouse
         image: clickhouse/clickhouse-server
         user: "101:101"
         hostname: clickhouse
@@ -202,66 +196,70 @@ services:
             - "127.0.0.1:9000:9000"
         healthcheck:
             test: ["CMD", "wget", "--spider", "-q", "localhost:8123/ping"]
-            interval: 30s
+            interval: 2s
             timeout: 5s
-            retries: 3
+            retries: 10
         restart: always
         security_opt:
             - seccomp:unconfined
-    hatchet-postgres:
-        container_name: hatchet-postgres
-        image: postgres:15.6
-        command: postgres -c 'max_connections=200'
-        restart: always
+
+    declare-workflow-db:
+        container_name: declare-workflow-db
+        image: postgres:17
         environment:
-            - POSTGRES_USER=hatchet
-            - POSTGRES_PASSWORD=hatchet
-            - POSTGRES_DB=hatchet
-        volumes:
-            - hatchet_lite_postgres_data:/var/lib/postgresql/data
+            POSTGRES_USER: airflow
+            POSTGRES_PASSWORD: airflow
+            POSTGRES_DB: airflow
+        # Let's have it be stateless for now
+        # volumes:
+        #     - postgres-db-volume:/var/lib/postgresql/data
         healthcheck:
-            test: ["CMD-SHELL", "pg_isready -U hatchet -d hatchet"]
+            test: ["CMD", "pg_isready", "-U", "airflow"]
             interval: 1s
-            timeout: 1s
-            retries: 20
-            start_period: 1s
-    hatchet-lite:
-        container_name: hatchet-lite
-        image: ghcr.io/hatchet-dev/hatchet/hatchet-lite:latest
-        ports:
-            - "8888:8888"
-            - "7077:7077"
-        depends_on:
-            hatchet-postgres:
-                condition: service_healthy
-        healthcheck:
-            test: ["CMD", "curl", "-f", "http://localhost:8888/"]
-            interval: 10s
-            timeout: 10s
             retries: 5
+            start_period: 5s
+        restart: always
+
+    declare-workflows:
+        container_name: declare-workflows
+        entrypoint: /start-airflow.sh
+        ports:
+            - "8080:8080"
+        restart: always
+        healthcheck:
+            test: ["CMD", "curl", "--fail", "http://localhost:8080/health"]
+            interval: 5s
+            retries: 10
+        image: ${AIRFLOW_IMAGE_NAME:-apache/airflow:latest}
         environment:
-            RABBITMQ_DEFAULT_USER: "user"
-            RABBITMQ_DEFAULT_PASS: "password"
-            DATABASE_URL: "postgresql://hatchet:hatchet@hatchet-postgres:5432/hatchet?sslmode=disable"
-            DATABASE_POSTGRES_PORT: "5432"
-            DATABASE_POSTGRES_HOST: "hatchet-postgres"
-            SERVER_TASKQUEUE_RABBITMQ_URL: amqp://user:password@localhost:5672/
-            SERVER_AUTH_COOKIE_DOMAIN: localhost
-            SERVER_AUTH_COOKIE_INSECURE: "t"
-            SERVER_GRPC_BIND_ADDRESS: "0.0.0.0"
-            SERVER_GRPC_INSECURE: "t"
-            SERVER_GRPC_BROADCAST_ADDRESS: localhost:7077
-            SERVER_GRPC_PORT: "7077"
-            SERVER_URL: http://localhost:8888
-            SERVER_AUTH_SET_EMAIL_VERIFIED: "t"
-            SERVER_LOGGER_LEVEL: warn
-            SERVER_LOGGER_FORMAT: console
-            DATABASE_LOGGER_LEVEL: warn
-            DATABASE_LOGGER_FORMAT: console
+            AIRFLOW__CORE__EXECUTOR: LocalExecutor
+            AIRFLOW__DATABASE__SQL_ALCHEMY_CONN: postgresql+psycopg2://airflow:airflow@declare-workflow-db/airflow
+            AIRFLOW__CORE__FERNET_KEY: ""
+            AIRFLOW__CORE__DAGS_ARE_PAUSED_AT_CREATION: "true"
+            AIRFLOW__CORE__LOAD_EXAMPLES: "false"
+            AIRFLOW__API__AUTH_BACKENDS: "airflow.api.auth.backend.basic_auth,airflow.api.auth.backend.session"
+            # yamllint disable rule:line-length
+            # Use simple http server on scheduler for health checks
+            # See https://airflow.apache.org/docs/apache-airflow/stable/administration-and-deployment/logging-monitoring/check-health.html#scheduler-health-check-server
+            # yamllint enable rule:line-length
+            AIRFLOW__SCHEDULER__ENABLE_HEALTH_CHECK: "true"
+            # WARNING: Use _PIP_ADDITIONAL_REQUIREMENTS option ONLY for a quick checks
+            # for other purpose (development, test and especially production usage) build/extend Airflow image.
+            _PIP_ADDITIONAL_REQUIREMENTS: ${_PIP_ADDITIONAL_REQUIREMENTS:-}
+            # The following line can be used to set a custom config file, stored in the local config folder
+            # If you want to use it, outcomment it and replace airflow.cfg with the name of your config file
+            # AIRFLOW_CONFIG: '/opt/airflow/config/airflow.cfg'
         volumes:
-            - "hatchet_lite_rabbitmq_data:/var/lib/rabbitmq/mnesia"
-            - "hatchet_lite_config:/config"
-        attach: false
+            - ${AIRFLOW_PROJ_DIR:-.}/workflows:/opt/airflow/dags
+            # - ${AIRFLOW_PROJ_DIR:-.}/logs:/opt/airflow/logs
+            # - ${AIRFLOW_PROJ_DIR:-.}/config:/opt/airflow/config
+            # - ${AIRFLOW_PROJ_DIR:-.}/plugins:/opt/airflow/plugins
+            - ./start-airflow.sh:/start-airflow.sh
+        user: "${AIRFLOW_UID:-50000}:0"
+        depends_on:
+            declare-workflow-db:
+                condition: service_healthy
+
     declare-ready-notifier:
         container_name: declare-ready-notifier
         # This service prints a message to the console when every container is ready
@@ -269,29 +267,27 @@ services:
         entrypoint: /bin/sh
         command: -c "echo 'All containers are ready!'"
         depends_on:
-            kong:
+            declare-gateway:
                 condition: service_healthy
-            studio:
+            declare-studio:
                 condition: service_healthy
-            studio-api:
+            declare-api:
                 condition: service_healthy
-            dashboards:
+            declare-dashboards:
                 condition: service_healthy
-            hot-model-reloader:
+            declare-hot-model-reloader:
                 condition: service_started
-            serve-models-api:
+            declare-serve-models-api:
                 condition: service_healthy
-            sql-linter:
+            declare-sql-linter:
                 condition: service_started
-            workflow-worker:
-                condition: service_started
-            clickhouse:
+            declare-warehouse-clickhouse:
                 condition: service_healthy
-            hatchet-lite:
+            declare-workflows:
+                condition: service_healthy
+            declare-workflow-db:
                 condition: service_healthy
         restart: "no"
-
-volumes:
-    hatchet_lite_postgres_data:
-    hatchet_lite_rabbitmq_data:
-    hatchet_lite_config:
+#
+# volumes:
+#     postgres-db-volume:
