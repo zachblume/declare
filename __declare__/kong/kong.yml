@@ -31,10 +31,10 @@ acls:
 #       password: $DASHBOARD_PASSWORD
 
 services:
-    - name: studio-api
-      url: http://studio-api:9998
+    - name: declare-api
+      url: http://declare-api:9998
       routes:
-          - name: studio-api-route
+          - name: declare-api-route
             strip_path: true
             paths:
                 - /api
