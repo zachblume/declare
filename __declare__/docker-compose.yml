@@ -228,9 +228,8 @@ services:
         restart: always
         healthcheck:
             test: ["CMD", "curl", "--fail", "http://localhost:8080/health"]
-            interval: 1s
-            timeout: 2s
-            retries: 50
+            interval: 5s
+            retries: 10
         image: ${AIRFLOW_IMAGE_NAME:-apache/airflow:latest}
         environment:
             AIRFLOW__CORE__EXECUTOR: LocalExecutor
