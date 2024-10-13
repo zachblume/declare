@@ -13,7 +13,7 @@ const jwtToken = import.meta.env.VITE_DUMMY_JWT;
 app.render(
     <StrictMode>
         <BrowserRouter>
-            <Theme accentColor="green" grayColor="olive">
+            <Theme accentColor="green" grayColor="olive" appearance="dark">
                 <App jwtToken={jwtToken} />
             </Theme>
         </BrowserRouter>
