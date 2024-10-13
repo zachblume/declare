@@ -35,15 +35,10 @@ Declare is an open-source framework for data engineering with framework-defined 
 -   [ ] Studio for managing Clickhouse and workflows
 -   [ ] CLI for linting, stateful DB migrations, and deployment
 -   [ ] Workflow engine
-    -   [x] Easy-to-write Python SDK backed by [Hatchet](https://hatchet.run/)
+    -   [x] Easy-to-write Python SDK via Airflow
     -   [ ] Build internal tools instead of CLIs: Declare CLI allows triggering workflows and tailing their output
-    -   [ ] Trigger workflows from:
-        -   [ ] Other workflows
-        -   [ ] Webhook-compatible REST API
-        -   [ ] Cron
 -   [ ] Log sink all services
     -   [ ] Datadog
-    -   [ ] S3
 
 ## File structure set up by create-declare-app
 
