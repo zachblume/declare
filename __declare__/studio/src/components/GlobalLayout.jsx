@@ -27,14 +27,16 @@ function Header() {
     return (
         <header className="flex flex-col py-3">
             <div className="flex justify-between items-center mb-2">
-                <div className="flex items-center space-x-2.5 px-4">
+                <div className="flex items-center space-x-2 px-4">
                     <ShapesIcon
                         className="text-neutral-500 mt-0.5"
-                        size={17}
-                        strokeWidth={2}
+                        size={20}
+                        strokeWidth={2.1}
                         color="#3ECF8E"
                     />
-                    <span className="text-neutral-300">Declare</span>
+                    <span className="text-neutral-300 font-semibold">
+                        Declare
+                    </span>
                     <span className="text-neutral-300 font-medium">/</span>
                     <span className="text-neutral-300 font-light">
                         Current Workspace
