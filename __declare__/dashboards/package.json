@@ -1,0 +1,8 @@
+{
+    "name": "declare-dashboards",
+    "version": "0.0.1",
+    "description": "Package for declare dashboards",
+    "main": "lib.jsx",
+    "author": "Zach Blume",
+    "private": false
+}

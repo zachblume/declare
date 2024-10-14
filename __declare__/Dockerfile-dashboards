@@ -1,6 +1,8 @@
 FROM node:20
 WORKDIR /usr/src/app
 COPY __declare__/dashboards .
+# The following is to enable the development of this package before npm-ing it:
+COPY __declare__/dashboards __declare__/dashboards
 COPY package* .
 RUN npm install
 
