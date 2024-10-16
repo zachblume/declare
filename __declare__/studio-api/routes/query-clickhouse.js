@@ -3,13 +3,14 @@ export default async function handler(req) {
 
     try {
         const response = await fetch(
-            "http://declare-warehouse-clickhouse:8123",
+            `http://declare-warehouse-clickhouse:8123/?default_format=JSON&query=${encodeURIComponent(
+                query
+            )}`,
             {
                 method: "POST",
                 headers: {
                     "Content-Type": "text/plain",
                 },
-                body: query,
             }
         );
 
