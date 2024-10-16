@@ -19,8 +19,7 @@ export default async function handler(req) {
         }
 
         const data = await response.text();
-
-        return new Response(JSON.stringify(data), { status: 200 });
+        return new Response(data, { status: 200 });
     } catch (error) {
         return new Response(JSON.stringify({ error: error.message }), {
             status: 500,

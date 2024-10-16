@@ -37,7 +37,7 @@ export function Results() {
             } catch (e) {
                 console.error(e);
                 console.log(data);
-                throw e;
+                // throw e;
             }
         },
         enabled: !!query,
