@@ -15,13 +15,16 @@ export function Results() {
     } = useQuery({
         queryKey: queryId,
         queryFn: async () => {
-            const response = await fetch("/embed/clickhouse", {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                },
-                body: JSON.stringify({ query }),
-            });
+            const response = await fetch(
+                "http://localhost:9998/query-clickhouse",
+                {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                    body: JSON.stringify({ query }),
+                }
+            );
             if (!response.ok) {
                 throw new Error(
                     `Network response was not ok, code ${response.status}: ${response.statusText}`
